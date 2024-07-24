@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/hue-cube.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Huebism - explore color palettes in HSL 3D space</title>
+  <script type="module" src="./main.js"></script>
+</head>
+
+<body>
+  <div id="grid">
+
+    <header>Huebism</header>
+
+    <div class="left-panel">
+
+      <div id="control-panel">
+        <fieldset> <!-- div -->
+          <legend>UI colors</legend>
+          <div class="setting">
+            <label for="bg-slider">Back</label>
+            <input id="bg-slider" type="range" min="0" max="100" value="65" />
+          </div>
+          <div class="setting">
+            <label for="fg-slider">Front</label>
+            <input id="fg-slider" type="range" min="0" max="100" value="100" />
+          </div>
+        </fieldset>
+        <fieldset> <!-- div -->
+          <legend>Hue slice <button id="hue-reset" alt="reset hue">🔄</button></legend>
+
+          <div class="setting">
+            <label for="hue-center-slider">Center</label>
+            <input id="hue-center-slider" type="range" min="0" max="360" />
+          </div>
+          <div class="setting">
+            <label for="hue-range-slider">Range</label>
+            <input id="hue-angle-slider" type="range" min="0" max="360" />
+          </div>
+        </fieldset>
+      </div>
+
+      <div id="palette-panel">
+        <div id="pre-palette-group">
+          <label for="pre-palette">Predefined</label>
+          <select name="pre-palette" id="pre-palette"></select>
+          <p>color count: <span id="pre-palette-counter">0</span></p>
+        </div>
+
+        <div id="custom-palette-group">
+          <label for="custom-palette">Custom</label>
+          <select name="custom-palette" id="custom-palette">
+            <hr>
+            <option value="new-palette">New palette...</option>
+          </select>
+          <button id="palette-rename">Rename</button>
+          <button id="palette-delete">Delete</button>
+          <hr width="100%">
+          <button disabled>Organize</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="right-panel">
+
+      <div id="info-panel"> <!--  class="group" -->
+        <div class="grid-row">
+          <div id="chosen-swatch"></div>
+          <!-- 👀🔘🌕🌑 -->
+          <input type="checkbox" id="viz-check" />
+          <label id="viz-label" for="viz-check">🔘</label>
+          
+          <div class="input-wrapper">
+            <input id="color-name" type="text" placeholder="Pick a color" readonly />
+          </div>
+  
+        </div>
+
+        <div class="gauge-grid">
+          <div id="h-gauge" class="gauge first">
+            <label for="h-slider">Hue</label>
+            <progress value="0" max="360"></progress>
+            <input type="range" id="h-slider" min="0" max="360" style="display: none;" />
+            <input type="text" readonly />
+          </div>
+          <div id="s-gauge" class="gauge">
+            <label for="s-slider" alt="Saturation">Satur.</label>
+            <progress value="0" max="1"></progress>
+            <input type="range" id="s-slider" min="0" max="1" step="0.01" style="display: none;" />
+            <input type="text" readonly />
+          </div>
+          <div id="l-gauge" class="gauge">
+            <label for="l-slider">Light</label>
+            <progress value="0" max="1"></progress>
+            <input type="range" id="l-slider" min="0" max="1" step="0.01" style="display: none;" />
+            <input type="text" readonly />
+          </div>
+
+          <div id="r-gauge" class="gauge first">
+            <label for="r-slider">Red</label>
+            <progress value="0" max="255"></progress>
+            <input type="range" id="r-slider" min="0" max="255" style="display: none;" />
+            <input type="text" readonly />
+          </div>
+          <div id="g-gauge" class="gauge">
+            <label for="g-slider">Green</label>
+            <progress value="0" max="255"></progress>
+            <input type="range" id="g-slider" min="0" max="255" style="display: none;" />
+            <input type="text" readonly />
+          </div>
+          <div id="b-gauge" class="gauge">
+            <label for="b-slider">Blue</label>
+            <progress value="0" max="255"></progress>
+            <input type="range" id="b-slider" min="0" max="255" style="display: none;" />
+            <input type="text" readonly />
+          </div>
+        </div>
+
+        <input id="color-hex" type="text" placeholder="#XXXXXX" readonly />
+      </div>
+
+      <div id="lerp-panel" style="display: none;">
+        <div>
+          <label for="lerp-count">Count</label>
+          <input type="number" id="lerp-count" name="lerp-count" min="1" max="15" value="1" />
+          <!-- <input type="range" id="lerp-count" min="1" max="10" /> -->
+          <!-- <input type="text" readonly /> -->
+        </div>
+
+        <div>
+          <label for="hue-ease">Hue</label>
+          <select name="hue-ease" id="hue-ease"></select>
+          <input type="range" id="hue-ease-slider" min="0" max="5" step="0.1" />
+        </div>
+
+        <div>
+          <label for="sat-ease">Saturation</label>
+          <select name="sat-ease" id="sat-ease"></select>
+          <input type="range" id="sat-ease-slider" min="0" max="5" step="0.1" />
+        </div>
+
+        <div>
+          <label for="lit-ease">Light</label>
+          <select name="lit-ease" id="lit-ease"></select>
+          <input type="range" id="lit-ease-slider" min="0" max="5" step="0.1" />
+        </div>
+
+        <div>
+          <button id="lerp-accept">Accept</button>
+          <button id="lerp-cancel">Cancel</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="plot-wrapper">
+      <div id="plot" class="plot"></div>
+    </div>
+
+    <!-- <div id="controls"> -->
+    <div class="bottom-panel">
+
+      <div id="palette-preview-group">
+        <div id="palette-preview"></div>
+        <div id="palette-gradient"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+
+</html>

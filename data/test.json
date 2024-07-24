@@ -1,0 +1,42 @@
+[
+    {
+        "name": "FLB",
+        "hex": "#000000"
+    },
+    {
+        "name": "BLB",
+        "hex": "#FFFFFF"
+    },
+    {
+        "name": "BLT",
+        "hex": "#FFFAFA"
+    },
+    {
+        "name": "BRT",
+        "hex": "#FFEBED"
+    },
+    {
+        "name": "FLT",
+        "hex": "#050000"
+    },
+    {
+        "name": "BCT",
+        "hex": "#FEFFFF"
+    },
+    {
+        "name": "FCT",
+        "hex": "#000101"
+    },
+    {
+        "name": "CCC",
+        "hex": "#40BFBF"
+    },
+    {
+        "name": "CCL",
+        "hex": "#BF4040"
+    },
+    {
+        "name": "CCR",
+        "hex": "#BF4042"
+    }
+]
