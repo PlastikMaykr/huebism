@@ -32,6 +32,7 @@
 
 ### In Progress
 
+- [ ] create a git brunch and folder for working on UI components
 
 
 ### Done ✓
