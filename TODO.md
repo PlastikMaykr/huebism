@@ -32,7 +32,6 @@
 
 ### In Progress
 
-- [ ] sliders auto-focus (change value on wheel over)
 
 
 ### Done ✓
@@ -55,3 +54,4 @@
 - [x] color input field (for HEX codes, etc.)
 - [x] background lightness slider
 - [x] font and cube edges lightness slider
+- [x] sliders & dropdowns: wheel event changes value

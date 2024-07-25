@@ -216,6 +216,47 @@ function autoFocus(slider) {
     });
 }
 
+/** 
+ * Step slider value with wheel event
+ * @param {d3.Selection<HTMLInputElement>} input
+ */
+function inputAutoWheel(input, negate = true) {
+    const min = +input.attr('min') || 0;
+    const max = +input.attr('max') || Infinity;
+    const step = +input.attr('step') || 1;
+
+    input.on('wheel', function (event) {
+        event.preventDefault();
+
+        const delta = Math.round(event.deltaY / 100) || Math.sign(event.deltaY);
+        const sign = negate ? -1 : 1;
+        const value = sign * delta * step + +this.value;
+
+        console.dir([min, value, max])
+        if (min > value || value > max) return;
+
+        this.value = value;
+        input.dispatch('input').dispatch('change');
+    });
+}
+
+/** 
+ * Traverse select options with wheel event
+ * @param {d3.Selection<HTMLSelectElement>} dropdown
+ */
+function dropdownAutoWheel(dropdown, skipLast = false) {
+    dropdown.on('wheel', function (event) {
+        event.preventDefault();
+
+        const step = Math.sign(event.deltaY);
+        const total = this.options.length - (skipLast ? 1 : 0);
+        const newIndex = (this.selectedIndex + step + total) % total;
+
+        this.selectedIndex = newIndex;
+        dropdown.dispatch('change');
+    });
+}
+
 
 /*
  * MARK: 3D plot
@@ -491,6 +532,7 @@ paletteSelect
  */
 /** @type {d3.Selection<HTMLSelectElement,Palette[],d3.BaseType,undefined>} */
 const customSelect = d3.select('#custom-palette')
+    .call(dropdownAutoWheel, true)
     .on('change', function (event) {
         // last option: 'New palette...'
         if (this.selectedIndex === this.options.length - 1) {
@@ -856,8 +898,8 @@ class LerpColors {
 
         d3.select('#lerp-count')
             .each((d, i, g) => g[i].value = 1)
+            .call(inputAutoWheel)
             .on('change', function () {
-                // console.log(this.value);
                 settings.count = +this.value;
                 reload();
             });
@@ -880,6 +922,7 @@ class LerpColors {
 
             dropdown
                 .each((d, i, g) => g[i].selectedIndex = 0)
+                .call(dropdownAutoWheel)
                 .on('change', function () {
                     settings.ease[prop] = this.value;
 
@@ -903,6 +946,7 @@ class LerpColors {
                 .attr('title', 3)
                 .style('display', 'none')
                 .call(titleUpdate)
+                .call(inputAutoWheel)
                 .on('change', function () {
                     settings.easeConfig[prop] = +this.value;
                     reload();
@@ -1319,7 +1363,8 @@ infoGauges.map = new Map(['h', 's', 'l', 'r', 'g', 'b']
             {
                 input: gauge.selectChild('[type="range"]')
                     .on('change', infoGauges.gaugeChange(prop))
-                    .call(autoFocus)
+                    // .call(autoFocus)
+                    .call(inputAutoWheel)
                     .node(),
                 progress: gauge.selectChild('progress')
                     .on('change', infoGauges.gaugeChange(prop))
@@ -1374,12 +1419,14 @@ function setBodyValue(plane, value) {
 }
 
 const bgSlider = d3.select('#bg-slider')
+    .call(inputAutoWheel)
     .on('input', function (event) {
         setBodyValue('bg', this.value);
     })
     .dispatch('input');
 
 const fgSlider = d3.select('#fg-slider')
+    .call(inputAutoWheel)
     .on('input', function (event) {
         setBodyValue('fg', this.value);
     })
@@ -1387,6 +1434,7 @@ const fgSlider = d3.select('#fg-slider')
 
 // hue slice
 const hueCeterSlider = d3.select('#hue-center-slider')
+    .call(inputAutoWheel)
     .each((d, i, g) => { g[i].value = 180 })
     .on('input', function (event) {
         hue.center = +this.value;
@@ -1396,6 +1444,7 @@ const hueCeterSlider = d3.select('#hue-center-slider')
     });
 
 const hueAngleSlider = d3.select('#hue-angle-slider')
+    .call(inputAutoWheel)
     .each((d, i, g) => { g[i].value = 360 })
     .on('input', function (event) {
         hue.angle = +this.value;
