@@ -8,7 +8,6 @@
 - [ ] move dot in screen Z dimention while dragging 
 - [ ] keep chosen color clone to enable undoing changes
 
-- [ ] info panel corner fold widget for marking chosen dot
 - [ ] 'dimension' resizable & dependant on viewport size
 - [ ] 'diameter' resizable & adjustable with a slider
 - [ ] toggle for disableing perspective
@@ -32,7 +31,7 @@
 
 ### In Progress
 
-- [ ] create a git brunch and folder for working on UI components
+- [ ] info panel corner fold widget for marking chosen dot
 
 
 ### Done ✓
@@ -56,3 +55,4 @@
 - [x] background lightness slider
 - [x] font and cube edges lightness slider
 - [x] sliders & dropdowns: wheel event changes value
+- [x] create a git brunch and folder for working on UI components
