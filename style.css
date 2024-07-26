@@ -102,7 +102,7 @@ header {
   background-color: rgba(128, 128, 128, 0.75);
   padding: var(--pad);
 
-  overflow: hidden;
+  /* overflow: hidden; */
   display: flex;
   flex-direction: column;
 }
@@ -251,19 +251,54 @@ header {
 
 #info-panel {
   align-self: center;
-  /* border-radius: 1em 0 0 1em; */
+  border-radius: 0 0 0 1em;
   /* display: grid; */
-
+  /* 
   overflow: hidden;
   display: flex;
   flex-direction: column;
+   */
+  position: relative;
+  /* background-color: unset; */
+  padding-top: calc(var(--pad) / 2);
+}
+
+#color-strip {
+  color: #808080;
+  /* position: absolute;
+  inset: 0;
+  background-color: rgba(128, 128, 128, 0.75);
+  z-index: -1; */
+  position: absolute;
+  width: 100%;
+  --pad: 30px;
+  height: var(--pad);
+  top: calc(var(--pad) * -1);
+  left: 0;
+  
+  --radius: 1em;
+  --fold: var(--pad);
+  /* --fold: calc(var(--pad) - 5px);
+  --hitbox: var(--pad); */
+}
+
+#color-strip > label {
+  color: inherit;
+  background-color: currentColor;
 }
 
 #chosen-swatch {
-  position: absolute;
+  color: inherit;
+  background-color: currentColor;
+  /* position: absolute;
   width: 100%;
+  --pad: 30px;
   height: var(--pad);
   top: calc(var(--pad) * -1);
+  left: 0; */
+  position: absolute;
+  inset: 0;
+  z-index: -1;
 }
 
 .grid-row {
@@ -271,7 +306,7 @@ header {
   position: relative;
   display: flex;
 }
-
+/* 
 #viz-label {
   background-color: darkgrey;
   border: 1px solid black;
@@ -294,7 +329,7 @@ input:checked+#viz-label {
 
 #viz-check {
   display: none;
-}
+} */
 
 .input-wrapper {
   overflow: hidden;

@@ -67,17 +67,27 @@
     <div class="right-panel">
 
       <div id="info-panel"> <!--  class="group" -->
-        <div class="grid-row">
-          <div id="chosen-swatch"></div>
-          <!-- 👀🔘🌕🌑 -->
+
+        <div id="color-strip" class="corner-fold">
+
+          <div id="chosen-swatch" class="corner-fold-background"></div>
           <input type="checkbox" id="viz-check" />
+          <label id="viz-label" for="viz-check"></label>
+          
+        </div>
+        
+        <!-- <div class="grid-row">
+          <input type="checkbox" id="viz-check" />
+          <div id="chosen-swatch"></div>
+          👀🔘🌕🌑
           <label id="viz-label" for="viz-check">🔘</label>
           
           <div class="input-wrapper">
             <input id="color-name" type="text" placeholder="Pick a color" readonly />
           </div>
-  
-        </div>
+        </div> -->
+
+        <input id="color-name" type="text" placeholder="Pick a color" readonly />
 
         <div class="gauge-grid">
           <div id="h-gauge" class="gauge first">

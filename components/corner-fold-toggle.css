@@ -1,0 +1,64 @@
+.corner-fold {
+    position: relative;
+    
+    /* override with higher specificity on target element */
+    --radius: 1rem;
+    --fold: 2rem;
+    --hitbox: var(--fold);
+}
+
+.corner-fold-background {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    clip-path: polygon(
+        /* 0 calc(var(--fold) - 1px),
+        calc(var(--fold) - 1px) 0, */
+        0 var(--fold),
+        var(--fold) 0,
+        100% 0%,
+        100% 100%,
+        0% 100%);
+}
+
+.corner-fold > input {
+    appearance: none;
+    padding: 0;
+    margin: 0;
+    height: var(--hitbox);
+    width: var(--hitbox);
+    display: inline-block;
+}
+
+.corner-fold > label {
+    /* pointer-events: none; */
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: var(--fold);
+    width: var(--fold);
+    filter: brightness(85%);
+    border-top-left-radius: var(--radius);
+    clip-path: polygon(
+        0 0,
+        100% 0%,
+        0% 100%);
+    transition:
+        transform 0.25s ease-out,
+        filter 0.25s ease-out;
+}
+
+.corner-fold > input:hover + label {
+    filter: brightness(60%);
+    transform: rotate3d(-1, 1, 0, 45deg);
+}
+
+.corner-fold > input:hover:checked + label {
+    filter: brightness(150%);
+    transform: rotate3d(-1, 1, 0, 150deg);
+}
+
+.corner-fold > input:checked + label {
+    filter: brightness(125%);
+    transform: rotate3d(-1, 1, 0, 180deg);
+}

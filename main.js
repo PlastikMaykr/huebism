@@ -1,5 +1,6 @@
 /* Imports */
 import './style.css';
+import './components/corner-fold-toggle.css';
 import * as d3 from 'd3';
 import { Swatch, Palette } from './classes';
 
@@ -120,9 +121,11 @@ const chosen = {
 /* 
  * MARK: Utilities
  */
-const chosenSwatchDiv = d3.select('#chosen-swatch');
+// const chosenSwatchDiv = d3.select('#chosen-swatch');
+const colorStrip = d3.select('#color-strip');
 function relabel(color) {
-    chosenSwatchDiv.style('background-color', color.formatHex())
+    // chosenSwatchDiv.style('background-color', color.formatHex())
+    colorStrip.style('color', color.formatHex())
 }
 
 function dotUpdate(dot) {
