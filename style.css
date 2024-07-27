@@ -75,6 +75,7 @@ header {
   display: grid;
   grid-template-rows: 1fr auto;
   grid-template-columns: 260px;
+  pointer-events: none;
 }
 
 .left-panel {
@@ -102,6 +103,7 @@ header {
   background-color: rgba(128, 128, 128, 0.75);
   padding: var(--pad);
 
+  pointer-events: auto;
   /* overflow: hidden; */
   display: flex;
   flex-direction: column;
@@ -284,7 +286,17 @@ header {
 
 #color-strip > label {
   color: inherit;
-  background-color: currentColor;
+  /* background-color: currentColor; */
+
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  background-image: 
+    linear-gradient(currentColor, currentColor),
+    linear-gradient(135deg, white, currentColor 50%);
+  background-origin: border-box;
+  background-clip:
+    padding-box,
+    border-box;
 }
 
 #chosen-swatch {
@@ -296,9 +308,11 @@ header {
   height: var(--pad);
   top: calc(var(--pad) * -1);
   left: 0; */
+  /* 
   position: absolute;
   inset: 0;
   z-index: -1;
+   */
 }
 
 .grid-row {

@@ -5,6 +5,7 @@
     --radius: 1rem;
     --fold: 2rem;
     --hitbox: var(--fold);
+    --timing: 0.25s ease-out;
 }
 
 .corner-fold-background {
@@ -30,6 +31,22 @@
     display: inline-block;
 }
 
+.corner-fold > input::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    height: var(--fold);
+    width: var(--fold);
+	opacity: 0.125;
+    background-image: linear-gradient(135deg,
+        transparent calc(var(--fold) * 0.707 - 0.5px),
+        /* white calc(var(--fold) * 0.707),
+        black calc(var(--fold) * 0.707), */
+		black,
+        transparent calc(var(--fold) * 0.707 + 0.5px)
+    );
+}
+
 .corner-fold > label {
     /* pointer-events: none; */
     position: absolute;
@@ -37,15 +54,16 @@
     left: 0;
     height: var(--fold);
     width: var(--fold);
-    filter: brightness(85%);
     border-top-left-radius: var(--radius);
     clip-path: polygon(
         0 0,
         100% 0%,
         0% 100%);
+
+	filter: brightness(90%);
     transition:
-        transform 0.25s ease-out,
-        filter 0.25s ease-out;
+        transform var(--timing),
+        filter var(--timing);
 }
 
 .corner-fold > input:hover + label {
@@ -61,4 +79,66 @@
 .corner-fold > input:checked + label {
     filter: brightness(125%);
     transform: rotate3d(-1, 1, 0, 180deg);
+}
+
+.corner-fold-shadow {
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: calc(var(--fold) * 2);
+    width: calc(var(--fold) * 2);
+    clip-path: polygon(
+        /* 0 calc(var(--fold) - 0.5px),
+        calc(var(--fold) - 0.5px) 0, */
+        0 var(--fold),
+        var(--fold) 0,
+        200% 0%,
+        200% 200%,
+        0% 200%);
+
+    z-index: -1;
+    opacity: 0.5;
+
+    --blur: 5px;
+    --skew: -15deg;
+    --translate: -5px;
+}
+
+.corner-fold-shadow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: var(--fold);
+    width: var(--fold);
+    border-bottom-right-radius: calc(var(--radius) * 2);
+
+    opacity: 0;
+    background-color: black;
+    filter: blur(var(--blur));
+    transform: skew(var(--skew), var(--skew)) translate(var(--translate), var(--translate));
+
+    transition:
+        filter var(--timing),
+        opacity var(--timing),
+        transform var(--timing);
+}
+input:hover + label + .corner-fold-shadow::before {
+    opacity: 1;
+    --blur: 4px;
+    --skew: -5deg;
+    --translate: -2px;
+}
+input:hover:checked + label + .corner-fold-shadow::before {
+    --blur: 2px;
+    --skew: 15deg;
+    --translate: 2px;
+}
+input:checked + label + .corner-fold-shadow::before {
+    border-bottom-right-radius: var(--radius);
+    opacity: 1;
+    --blur: 1px;
+    --skew: 10deg;
+    --translate: 0px;
 }
