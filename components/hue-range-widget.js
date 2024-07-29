@@ -111,6 +111,7 @@ export class HueWheel {
         this.container
             .classed('hue-wheel', true)
             .datum(180)
+            .on('wheel', this.wheelHandler.bind(this))
             .call(this.drag, 'wheel', this);
 
         this.knobLeft = this.container
@@ -156,6 +157,26 @@ export class HueWheel {
         this.container.datum(center);
         this.knobLeft.datum(start);
         this.knobRight.datum(end);
+    }
+
+    /**
+     * 
+     * @param {WheelEvent} event 
+     */
+    wheelHandler(event) {
+        event.preventDefault();
+        // console.log(event);
+        let value = Math.round(event.deltaY / 100) || Math.sign(event.deltaY);
+        if (event.altKey) value *= 10;
+
+        const range = this.range;
+
+        if (event.ctrlKey) {
+            range.start += value;
+            range.end -= value;
+        } else {
+            range.center += value;
+        }
     }
 
     /**
