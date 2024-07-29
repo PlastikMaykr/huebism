@@ -3,6 +3,7 @@ import './style.css';
 import './components/corner-fold-toggle.css';
 import * as d3 from 'd3';
 import { Swatch, Palette } from './classes';
+import { HueWheel } from './components/hue-range-widget'
 
 
 /* 
@@ -1467,6 +1468,8 @@ const hueResetButton = d3.select('#hue-reset')
         dots.call(remapHueAxis);
     });
 
+new HueWheel('#hue-wheel');
+
 
 /*
  * MARK: Globals
@@ -1477,3 +1480,4 @@ globalThis.Swatch = Swatch;
 globalThis.Palette = Palette;
 globalThis.Preview = PalettePreview;
 globalThis.Lerp = LerpColors;
+globalThis.Hue = hue;

@@ -1,0 +1,85 @@
+.hue-wheel {
+    background-image: conic-gradient(#FF0000, #FFFF00, #00FF00, #00FFFF, #0000FF, #FF00FF, #FF0000);
+    background-image: conic-gradient(in hsl longer hue, red, red);
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    position: relative;
+
+    --start: 0deg;
+    --angle: 360deg;
+}
+
+.hue-wheel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+
+    background-image: conic-gradient(from var(--start),
+            transparent var(--angle),
+            black var(--angle));
+    opacity: 0.55;
+    mix-blend-mode: multiply;
+}
+
+.hue-wheel-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+.hue-wheel-left,
+.hue-wheel-right {
+    background-color: currentColor;
+    border: 1px solid #808080;
+    box-sizing: border-box;
+
+    position: absolute;
+    height: 50%;
+    width: 1rem;
+    top: 0;
+    left: 50%;
+}
+
+.hue-wheel-left {
+    color: #ffffffAA;
+    border-radius: 5px 10em;
+    transform-origin: 0% 100%;
+    translate: 0 0;
+    rotate: 0deg;
+}
+
+.hue-wheel-right {
+    color: #000000AA;
+    border-radius: 10em 5px;
+    transform-origin: 100% 100%;
+    translate: -100% 0;
+    rotate: 360deg;
+}
+
+.hue-wheel-reset {
+    position: absolute;
+    width: 3rem;
+    /* height: 50%; */
+    aspect-ratio: 1;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    border-radius: 50%;
+
+    background-color: #808080;
+    position: relative;
+}
+
+.hue-wheel-reset::after {
+    content: '⟳';
+    position: absolute;
+    inset: 0;
+
+    display: grid;
+    place-items: center;
+}
