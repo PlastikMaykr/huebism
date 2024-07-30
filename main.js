@@ -33,6 +33,7 @@ const remapScale = d3.scaleLinear()
 const hueScale = remapScale.copy()
     .domain([0, 360]);
 
+/* 
 const hue = {
     center: 180,
     angle: 360,
@@ -46,6 +47,18 @@ const hue = {
         return this.range;
     }
 };
+ */
+
+function hueRangeCallback() {
+    /* hue.reRange() */
+    // console.log(this);
+    hueScale.domain(this.spread());
+
+    /* dots.call(remapHueAxis) */
+    dots.call(remapHueAxis);
+}
+
+const hueWidget = new HueWheel('#hue-wheel', hueRangeCallback);
 
 /**
  * @typedef ColorStore
@@ -391,7 +404,9 @@ hitbox.call(cubeDrag);
  */
 /** @param {d3.Selection} dots */
 function remapHueAxis(dots) {
-    const [min, max] = hue.range;
+    // const [min, max] = hue.range;
+    // console.log(hueWidget?.range.spread());
+    const [min, max] = hueWidget?.range.spread() ?? [0, 360];
 
     if (0 <= min && max <= 360) { // [ ■■■ ]
         dots.each((d, i, g) => {
@@ -1436,6 +1451,7 @@ const fgSlider = d3.select('#fg-slider')
     })
     .dispatch('input');
 
+/* 
 // hue slice
 const hueCeterSlider = d3.select('#hue-center-slider')
     .call(inputAutoWheel)
@@ -1469,6 +1485,7 @@ const hueResetButton = d3.select('#hue-reset')
     });
 
 new HueWheel('#hue-wheel');
+ */
 
 
 /*
@@ -1480,4 +1497,4 @@ globalThis.Swatch = Swatch;
 globalThis.Palette = Palette;
 globalThis.Preview = PalettePreview;
 globalThis.Lerp = LerpColors;
-globalThis.Hue = hue;
+globalThis.Hue = hueWidget;

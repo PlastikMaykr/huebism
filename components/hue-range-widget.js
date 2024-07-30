@@ -17,9 +17,14 @@ class HueRange {
         return this.cap(angle) / 360;
     }
 
-    /**@param {HueWheel} wheel  */
-    constructor(wheel) {
+    /**
+     * 
+     * @param {HueWheel} wheel 
+     * @param {Function} callback 
+     */
+    constructor(wheel, callback) {
         this.wheel = wheel;
+        this.callback = callback;
 
         this._start = 0;
         this._end = 360;
@@ -39,6 +44,8 @@ class HueRange {
         this.wheel.knobLeft.style('rotate', angle + 'deg');
         this.wheel.container.style('--start', angle + 'deg');
         this.wheel.container.style('--angle', this.delta() + 'deg');
+
+        this.callback?.();
     }
 
     get end() {
@@ -54,6 +61,8 @@ class HueRange {
 
         this.wheel.knobRight.style('rotate', angle + 'deg');
         this.wheel.container.style('--angle', this.delta() + 'deg');
+
+        this.callback?.();
     }
 
     get center() {
@@ -71,6 +80,8 @@ class HueRange {
 
         this.wheel.container.style('--start', this._start + 'deg');
         this.wheel.container.style('--angle', this.delta() + 'deg');
+
+        this.callback?.();
     }
 
     reset() {
@@ -82,6 +93,8 @@ class HueRange {
 
         this.wheel.container.style('--start', 0 + 'deg');
         this.wheel.container.style('--angle', 360 + 'deg');
+
+        this.callback?.();
     }
 
     delta() {
@@ -105,12 +118,12 @@ export class HueWheel {
     /** @type {d3.Selection} */
     container;
 
-    constructor(selector) {
+    constructor(selector, rangeCallback) {
         this.container = selector instanceof d3.selection ?
             selector :
             d3.select(selector);
 
-        this.range = new HueRange(this);
+        this.range = new HueRange(this, rangeCallback);
 
         this.center = this.container
             .append('div')
@@ -182,6 +195,7 @@ export class HueWheel {
         const range = this.range;
 
         if (event.ctrlKey) {
+            // TODO: rework to avoid calling range callback twice
             range.start += value;
             range.end -= value;
         } else {
