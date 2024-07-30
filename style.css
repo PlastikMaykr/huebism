@@ -127,6 +127,11 @@ header {
   gap: 1rem;
 }
 
+#hue-wheel-group {
+  padding: 0.5em;
+  overflow: visible;
+}
+
 #palette-panel {
   border-bottom-right-radius: 0;
   gap: 1em;
