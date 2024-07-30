@@ -29,6 +29,11 @@ class HueRange {
         return this._start;
     }
     set start(angle) {
+        if (angle < -180) {
+            angle += 360;
+        } else if (angle >= 360) {
+            angle -= 360;
+        }
         this._start = angle;
 
         this.wheel.knobLeft.style('rotate', angle + 'deg');
@@ -40,6 +45,11 @@ class HueRange {
         return this._end;
     }
     set end(angle) {
+        if (angle <= 0) {
+            angle += 360;
+        } else if (angle > 540) {
+            angle -= 360;
+        }
         this._end = angle;
 
         this.wheel.knobRight.style('rotate', angle + 'deg');
@@ -51,11 +61,10 @@ class HueRange {
     }
     set center(angle) {
         const center = this.center;
-        const half = this.delta() / 2;
-        this._start = angle - half;
-        this._end = angle + half;
-        this._start %= 360;
-        this._end %= 360;
+        const [start, end] = this.spread();
+        const diff = angle - center;
+        this._start = start + diff;
+        this._end = end + diff;
 
         this.wheel.knobLeft.style('rotate', this._start + 'deg');
         this.wheel.knobRight.style('rotate', this._end + 'deg');
@@ -146,8 +155,9 @@ export class HueWheel {
      */
     pointerAngle(event) {
         const [x, y] = d3.pointer(event, this.center);
-        const angle = -Math.atan2(-x, -y);
-        return angleScale(angle);
+        const radians = -Math.atan2(-x, -y);
+        const degrees = angleScale(radians);
+        return HueRange.cap(degrees);
     }
 
     updateDatums() {
@@ -177,6 +187,8 @@ export class HueWheel {
         } else {
             range.center += value;
         }
+
+        this.updateDatums();
     }
 
     /**
