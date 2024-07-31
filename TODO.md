@@ -8,7 +8,6 @@
 - [ ] move dot in screen Z dimention while dragging 
 - [ ] keep chosen color clone to enable undoing changes
 
-- [ ] info panel corner fold widget for marking chosen dot
 - [ ] 'dimension' resizable & dependant on viewport size
 - [ ] 'diameter' resizable & adjustable with a slider
 - [ ] toggle for disableing perspective
@@ -17,7 +16,6 @@
 - [ ] cube drag rotation by cube face closest to view
 - [ ] pass dot events through cube face closest to view
 - [ ] cube rotation indicator widget
-- [ ] hue range widget (instead of sliders)
 - [ ] dots enter and exit animations
 
 - [ ] center dots CSS transformation origin (like SVG <circle>)
@@ -32,7 +30,7 @@
 
 ### In Progress
 
-- [ ] create a git brunch and folder for working on UI components
+- [ ] general styling upgrades
 
 
 ### Done ✓
@@ -56,3 +54,6 @@
 - [x] background lightness slider
 - [x] font and cube edges lightness slider
 - [x] sliders & dropdowns: wheel event changes value
+- [x] create a git brunch and folder for working on UI components
+- [x] info panel corner fold widget for marking chosen dot
+- [x] hue range widget

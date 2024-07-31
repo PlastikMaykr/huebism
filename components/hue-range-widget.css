@@ -1,0 +1,131 @@
+.hue-wheel {
+    cursor: grab;
+    background-image: conic-gradient(#FF0000, #FFFF00, #00FF00, #00FFFF, #0000FF, #FF00FF, #FF0000);
+    background-image: conic-gradient(in hsl longer hue, red, red);
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    position: relative;
+
+    box-sizing: border-box;
+    border: 5px solid #FFFFFF66;
+    /* border-color: hsl(from currentColor h s l / 0.25); */
+    background-origin: border-box;
+    box-shadow: 2px 2px 6px 1px #00000033;
+
+    --start: 0deg;
+    --angle: 360deg;
+}
+
+.hue-wheel:active {
+    cursor: grabbing;
+}
+
+.hue-wheel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+
+    background-image: conic-gradient(from var(--start),
+            transparent var(--angle),
+            black var(--angle));
+    opacity: 0.55;
+    mix-blend-mode: multiply;
+}
+
+.hue-wheel::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 100%;
+
+    translate: -50% 0%;
+    rotate: calc(var(--start) + var(--angle) / 2);
+
+    /* background-image: linear-gradient(white, black); */
+    background-image: linear-gradient(transparent 50%, black 50%);
+    opacity: 0.5;
+}
+
+.hue-wheel-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+.hue-wheel-left,
+.hue-wheel-right {
+    background-color: #999;
+    outline: 2px solid #999;
+    outline-offset: -0.5px;
+    box-sizing: border-box;
+
+    position: absolute;
+    width: 16px;
+    height: 55%;
+    bottom: 50%;
+    left: 50%;
+
+    opacity: 0;
+    transition: opacity 150ms;
+}
+
+.hue-wheel:hover > .hue-wheel-left,
+.hue-wheel:hover > .hue-wheel-right {
+    opacity: 1;
+}
+
+.hue-wheel-left {
+    background-image: linear-gradient(90deg, #00000044, #00000015, transparent 75%);
+    border-left: 2px solid #FFFFFF66;
+    border-radius: 1px 15px;
+    transform-origin: 0% 100%;
+    translate: 0 0;
+    rotate: 0deg;
+}
+
+.hue-wheel-right {
+    background-image: linear-gradient(-90deg, #00000044, #00000015, transparent 75%);
+    border-right: 2px solid #FFFFFF66;
+    border-radius: 15px 1px;
+    transform-origin: 100% 100%;
+    translate: -100% 0;
+    rotate: 360deg;
+}
+
+.hue-wheel-reset {
+    cursor: pointer;
+    z-index: 1;
+    position: absolute;
+    width: 50px;
+    aspect-ratio: 1;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    border-radius: 50%;
+
+    background-color: #AAA;
+    border: 5px solid #CCC;
+    outline: 1px solid #FFFFFF66;
+    box-shadow:
+        1px 2px 3px 1px #00000066,
+        0px 0px 2px 0px #00000033 inset,
+        -4px -6px 6px 3px #00000033 inset,
+        1px 2px 6px 10px #CCCCCCAA inset;
+}
+
+.hue-wheel-reset::after {
+    content: '⟳';
+    font-size: 150%;
+    position: absolute;
+    inset: 0;
+
+    display: grid;
+    place-items: center;
+}

@@ -1,7 +1,9 @@
 /* Imports */
 import './style.css';
+import './components/corner-fold-toggle.css';
 import * as d3 from 'd3';
 import { Swatch, Palette } from './classes';
+import { HueWheel } from './components/hue-range-widget'
 
 
 /* 
@@ -31,19 +33,13 @@ const remapScale = d3.scaleLinear()
 const hueScale = remapScale.copy()
     .domain([0, 360]);
 
-const hue = {
-    center: 180,
-    angle: 360,
-    range: [0, 360],
-    reRange: function () {
-        const halfAng = this.angle / 2;
-        this.range[0] = this.center - halfAng;
-        this.range[1] = this.center + halfAng;
+function hueRangeCallback() {
+    hueScale.domain(this.spread());
 
-        hueScale.domain(this.range);
-        return this.range;
-    }
-};
+    dots.call(remapHueAxis);
+}
+
+const hueWidget = new HueWheel('#hue-wheel', hueRangeCallback);
 
 /**
  * @typedef ColorStore
@@ -120,9 +116,11 @@ const chosen = {
 /* 
  * MARK: Utilities
  */
-const chosenSwatchDiv = d3.select('#chosen-swatch');
+// const chosenSwatchDiv = d3.select('#chosen-swatch');
+const colorStrip = d3.select('#color-strip');
 function relabel(color) {
-    chosenSwatchDiv.style('background-color', color.formatHex())
+    // chosenSwatchDiv.style('background-color', color.formatHex())
+    colorStrip.style('color', color.formatHex())
 }
 
 function dotUpdate(dot) {
@@ -387,7 +385,7 @@ hitbox.call(cubeDrag);
  */
 /** @param {d3.Selection} dots */
 function remapHueAxis(dots) {
-    const [min, max] = hue.range;
+    const [min, max] = hueWidget?.range.spread() ?? [0, 360];
 
     if (0 <= min && max <= 360) { // [ ■■■ ]
         dots.each((d, i, g) => {
@@ -1432,38 +1430,6 @@ const fgSlider = d3.select('#fg-slider')
     })
     .dispatch('input');
 
-// hue slice
-const hueCeterSlider = d3.select('#hue-center-slider')
-    .call(inputAutoWheel)
-    .each((d, i, g) => { g[i].value = 180 })
-    .on('input', function (event) {
-        hue.center = +this.value;
-        hue.reRange();
-
-        dots.call(remapHueAxis);
-    });
-
-const hueAngleSlider = d3.select('#hue-angle-slider')
-    .call(inputAutoWheel)
-    .each((d, i, g) => { g[i].value = 360 })
-    .on('input', function (event) {
-        hue.angle = +this.value;
-        hue.reRange();
-
-        dots.call(remapHueAxis);
-    });
-
-const hueResetButton = d3.select('#hue-reset')
-    .on('click', (event) => {
-        hueCeterSlider.node().value = 180;
-        hueAngleSlider.node().value = 360;
-        hue.center = 180;
-        hue.angle = 360;
-        hue.reRange();
-
-        dots.call(remapHueAxis);
-    });
-
 
 /*
  * MARK: Globals
@@ -1474,3 +1440,4 @@ globalThis.Swatch = Swatch;
 globalThis.Palette = Palette;
 globalThis.Preview = PalettePreview;
 globalThis.Lerp = LerpColors;
+globalThis.Hue = hueWidget;
