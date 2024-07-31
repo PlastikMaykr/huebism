@@ -1,4 +1,5 @@
 .hue-wheel {
+    cursor: grab;
     background-image: conic-gradient(#FF0000, #FFFF00, #00FF00, #00FFFF, #0000FF, #FF00FF, #FF0000);
     background-image: conic-gradient(in hsl longer hue, red, red);
     width: 100%;
@@ -14,6 +15,10 @@
 
     --start: 0deg;
     --angle: 360deg;
+}
+
+.hue-wheel:active {
+    cursor: grabbing;
 }
 
 .hue-wheel::before {
@@ -96,6 +101,7 @@
 }
 
 .hue-wheel-reset {
+    cursor: pointer;
     z-index: 1;
     position: absolute;
     width: 50px;

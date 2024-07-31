@@ -23,6 +23,7 @@
 }
 
 .corner-fold > input {
+    cursor: pointer;
     appearance: none;
     padding: 0;
     margin: 0;
@@ -48,6 +49,7 @@
 }
 
 .corner-fold > label {
+    cursor: pointer;
     /* pointer-events: none; */
     position: absolute;
     top: 0;

@@ -30,7 +30,7 @@
 
 ### In Progress
 
-- [ ] hue range widget (instead of sliders)
+- [ ] general styling upgrades
 
 
 ### Done ✓
@@ -56,3 +56,4 @@
 - [x] sliders & dropdowns: wheel event changes value
 - [x] create a git brunch and folder for working on UI components
 - [x] info panel corner fold widget for marking chosen dot
+- [x] hue range widget

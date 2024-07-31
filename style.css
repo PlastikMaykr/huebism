@@ -36,6 +36,18 @@ label {
   user-select: none;
 }
 
+select,
+button,
+input[type="range"] {
+  cursor: pointer;
+}
+
+select:disabled,
+button:disabled,
+input[type="range"]:disabled {
+  cursor: unset;
+}
+
 select {
   text-overflow: ellipsis;
   max-width: 40ch;
@@ -238,18 +250,25 @@ header {
 }
 
 #add-color {
+  cursor: copy;
   background-color: green;
   top: 5%;
 }
 
 #lerp-color {
+  cursor: copy;
   background-color: gold;
   bottom: 5%;
 }
 
 #drag-color {
+  cursor: grab;
   background-color: dodgerblue;
   top: 5%;
+}
+
+#drag-color:active {
+  cursor: grabbing;
 }
 
 #remove-color {
