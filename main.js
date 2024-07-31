@@ -33,28 +33,9 @@ const remapScale = d3.scaleLinear()
 const hueScale = remapScale.copy()
     .domain([0, 360]);
 
-/* 
-const hue = {
-    center: 180,
-    angle: 360,
-    range: [0, 360],
-    reRange: function () {
-        const halfAng = this.angle / 2;
-        this.range[0] = this.center - halfAng;
-        this.range[1] = this.center + halfAng;
-
-        hueScale.domain(this.range);
-        return this.range;
-    }
-};
- */
-
 function hueRangeCallback() {
-    /* hue.reRange() */
-    // console.log(this);
     hueScale.domain(this.spread());
 
-    /* dots.call(remapHueAxis) */
     dots.call(remapHueAxis);
 }
 
@@ -404,8 +385,6 @@ hitbox.call(cubeDrag);
  */
 /** @param {d3.Selection} dots */
 function remapHueAxis(dots) {
-    // const [min, max] = hue.range;
-    // console.log(hueWidget?.range.spread());
     const [min, max] = hueWidget?.range.spread() ?? [0, 360];
 
     if (0 <= min && max <= 360) { // [ ■■■ ]
@@ -1450,42 +1429,6 @@ const fgSlider = d3.select('#fg-slider')
         setBodyValue('fg', this.value);
     })
     .dispatch('input');
-
-/* 
-// hue slice
-const hueCeterSlider = d3.select('#hue-center-slider')
-    .call(inputAutoWheel)
-    .each((d, i, g) => { g[i].value = 180 })
-    .on('input', function (event) {
-        hue.center = +this.value;
-        hue.reRange();
-
-        dots.call(remapHueAxis);
-    });
-
-const hueAngleSlider = d3.select('#hue-angle-slider')
-    .call(inputAutoWheel)
-    .each((d, i, g) => { g[i].value = 360 })
-    .on('input', function (event) {
-        hue.angle = +this.value;
-        hue.reRange();
-
-        dots.call(remapHueAxis);
-    });
-
-const hueResetButton = d3.select('#hue-reset')
-    .on('click', (event) => {
-        hueCeterSlider.node().value = 180;
-        hueAngleSlider.node().value = 360;
-        hue.center = 180;
-        hue.angle = 360;
-        hue.reRange();
-
-        dots.call(remapHueAxis);
-    });
-
-new HueWheel('#hue-wheel');
- */
 
 
 /*

@@ -238,12 +238,10 @@ export class HueWheel {
         function dragging(event) {
             const currentAngle = pointerAngle(event) - deltaAngle;
             rerange(currentAngle);
-            // console.log('angle: ', currentAngle);
         }
 
         function dragend(event) {
             updateDatums();
-            // console.log(self.range.spread());
         }
 
         return d3.drag()
