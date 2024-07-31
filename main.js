@@ -473,6 +473,22 @@ const predefined = {
         name: 'google_material',
         palette: null
     },
+    'Open color': {
+        name: 'open-color',
+        palette: null
+    },
+    'Tailwind': {
+        name: 'tailwind',
+        palette: null
+    },
+    'Canva': {
+        name: 'canva',
+        palette: null
+    },
+    'Figma': {
+        name: 'figma',
+        palette: null
+    },
 }
 
 /** @type {Swatch[]} */
