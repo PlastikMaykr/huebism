@@ -6,6 +6,7 @@
   color-scheme: light dark;
 
   --pad: 1.5rem;
+  --corner: 15px;
 }
 
 :root,
@@ -18,7 +19,7 @@ body {
   min-width: 320px;
   /* min-height: 100vh; */
   height: 100vh;
-  background-color: hsl(0, 0%, var(--bg-value, 50%));
+  background-color: black;
   color: hsl(0, 0%, var(--fg-value, 95%));
 }
 
@@ -50,24 +51,100 @@ input[type="range"]:disabled {
 
 select {
   text-overflow: ellipsis;
-  max-width: 40ch;
+  /* max-width: 40ch; */
 }
 
 #grid {
+  background-color: hsl(0, 0%, var(--bg-value, 50%));
+
   margin: 0 auto;
   max-width: 1600px;
   width: 100%;
   height: 100%;
 
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  grid-template-rows: auto 1fr auto;
   gap: 0.5em;
-  /* TODO: media queries */
+  grid-template-columns: 260px minmax(0, 1fr) 260px;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   grid-template-areas:
     "header header header"
-    "lefttop center righttop"
-    "leftdown bottom rightdown";
+    "left center right"
+    "left bottom right";
+}
+
+@media (min-width: 1250px) {
+  #palette-panel {
+    border-bottom-right-radius: 0;
+  }
+
+  #lerp-panel {
+    border-bottom-left-radius: 0;
+  }
+}
+
+@media (max-width: 1250px) {
+  #grid {
+    grid-template-areas:
+      "header header header"
+      "left center right"
+      "bottom bottom bottom";
+  }
+}
+
+@media (max-width: 1025px) {
+  #grid {
+    grid-template-columns: minmax(0, 1fr) 240px;
+    grid-template-rows: auto minmax(0, min-content) 1fr auto;
+    grid-template-areas:
+      "header header"
+      "center right"
+      "center left"
+      "bottom left";
+  }
+
+  .left-panel>div {
+    border-radius: var(--corner) 0 0 var(--corner) !important;
+  }
+}
+
+@media (max-width: 800px) {
+  body {
+    height: auto;
+    overflow: auto;
+    --pad: 2.5rem;
+  }
+
+  #grid {
+    gap: 0;
+    grid-template-columns: 100%;
+    grid-template-rows: none;
+    grid-auto-rows: auto;
+    grid-template-areas:
+      "header"
+      "left"
+      "center"
+      "right"
+      "bottom"
+    ;
+  }
+
+  .left-panel,
+  .right-panel {
+    gap: 0.5em !important;
+  }
+
+  .left-panel>div,
+  .right-panel>div {
+    border-radius: 0 !important;
+  }
+
+  #control-panel {
+    display: none;
+  }
+
+  #plot-wrapper {
+    scale: 75%;
+  }
 }
 
 header {
@@ -85,17 +162,19 @@ header {
 .left-panel,
 .right-panel {
   display: grid;
+  gap: 0.25em;
   grid-template-rows: 1fr auto;
-  grid-template-columns: 260px;
+  grid-template-columns: 100%;
   pointer-events: none;
+  overflow: auto;
 }
 
 .left-panel {
-  grid-area: lefttop / lefttop / leftdown / leftdown;
+  grid-area: left;
 }
 
 .right-panel {
-  grid-area: righttop / righttop / rightdown / rightdown;
+  grid-area: right;
 }
 
 .bottom-panel {
@@ -104,7 +183,7 @@ header {
 
   grid-area: bottom;
   justify-self: center;
-  border-radius: 1em 1em 0 0;
+  border-radius: var(--corner) var(--corner) 0 0;
   max-width: 100%;
   width: fit-content;
   box-sizing: border-box;
@@ -122,11 +201,11 @@ header {
 }
 
 .left-panel>div {
-  border-radius: 0 1em 1em 0;
+  border-radius: 0 var(--corner) var(--corner) 0;
 }
 
 .right-panel>div {
-  border-radius: 1em 0 0 1em;
+  border-radius: var(--corner) 0 0 var(--corner);
 }
 
 #plot-wrapper {
@@ -145,12 +224,12 @@ header {
 }
 
 #palette-panel {
-  border-bottom-right-radius: 0;
+  /* border-bottom-right-radius: 0; */
   gap: 1em;
 }
 
 #lerp-panel {
-  border-bottom-left-radius: 0;
+  /* border-bottom-left-radius: 0; */
   display: grid;
   gap: 1em;
 }
@@ -163,7 +242,7 @@ header {
 
 #palette-preview-group {
   position: relative;
-  max-width: 50vw;
+  /* max-width: 50vw; */
 }
 
 #palette-gradient {
@@ -189,7 +268,7 @@ header {
 #palette-preview:empty::before {
   content: '';
   padding: 3em 2em;
-  
+
   outline: 2px solid white;
   outline-offset: -2px;
 }
@@ -197,7 +276,7 @@ header {
 #palette-preview:empty::after {
   position: absolute;
   content: 'double click a dot to add to palette';
-  inset:0;
+  inset: 0;
   padding: 0.5em;
   font-size: 0.75rem;
   line-height: 1.2;
@@ -277,8 +356,9 @@ header {
 }
 
 #info-panel {
+  margin-top: 30px;
   align-self: center;
-  border-radius: 0 0 0 1em;
+  border-radius: 0 0 0 var(--corner);
   position: relative;
   padding-top: calc(var(--pad) / 2);
 }
@@ -291,7 +371,7 @@ header {
   height: var(--pad);
   top: calc(var(--pad) * -1);
   left: 0;
-  
+
   --radius: 1em;
   --fold: var(--pad);
   /* --fold: calc(var(--pad) - 5px);
@@ -303,7 +383,7 @@ header {
 
   box-sizing: border-box;
   border: 1px solid transparent;
-  background-image: 
+  background-image:
     linear-gradient(currentColor, currentColor),
     linear-gradient(135deg, white, currentColor 50%);
   background-origin: border-box;
