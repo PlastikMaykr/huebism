@@ -224,13 +224,14 @@ function inputAutoWheel(input, negate = true) {
     const step = +input.attr('step') || 1;
 
     input.on('wheel', function (event) {
+        if (this.disabled) return;
         event.preventDefault();
 
         const delta = Math.round(event.deltaY / 100) || Math.sign(event.deltaY);
         const sign = negate ? -1 : 1;
         const value = sign * delta * step + +this.value;
 
-        console.dir([min, value, max])
+        // console.dir([min, value, max])
         if (min > value || value > max) return;
 
         this.value = value;
@@ -886,7 +887,7 @@ class LerpColors {
     };
 
     static easeings = {
-        // {func: config}
+        // { ease: config }
         'easeLinear': null,
         'easeSinIn': null,
         'easeSinOut': null,
@@ -929,10 +930,10 @@ class LerpColors {
         for (const [prop, dropdown] of Object.entries(dropdowns)) {
             dropdown
                 .selectAll('option')
-                .data(Object.keys(easeings))
+                .data(Object.entries(easeings))
                 .join('option')
-                .text(d => d.split('ease')[1])
-                .attr('value', d => d);
+                .text(([ease, config]) => ease.split('ease')[1] + (config ? ' ⚙' : ''))
+                .attr('value', ([ease]) => ease);
 
             dropdown
                 .each((d, i, g) => g[i].selectedIndex = 0)
@@ -940,8 +941,10 @@ class LerpColors {
                 .on('change', function () {
                     settings.ease[prop] = this.value;
 
+                    const noConfig = !easeings[this.value];
                     d3.select(this.nextElementSibling)
-                        .style('display', easeings[this.value] ? null : 'none');
+                        .classed('disabled', noConfig)
+                        .attr('disabled', noConfig ? 'none' : null);
 
                     reload();
                 })
@@ -958,7 +961,8 @@ class LerpColors {
             slider
                 .each((d, i, g) => g[i].value = 3)
                 .attr('title', 3)
-                .style('display', 'none')
+                .attr('disabled', true)
+                .classed('disabled', true)
                 .call(titleUpdate)
                 .call(inputAutoWheel)
                 .on('change', function () {

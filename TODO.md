@@ -1,9 +1,8 @@
 ### Todo
 
-- [ ] custom palettes export
-- [ ] create custom palettes from various data
 - [ ] import predefined palette
 - [ ] store UI widgets' state
+- [ ] panels' headers with popup instructions
 - [ ] drag chosen dot across looked at dimensions
 - [ ] move dot in screen Z dimention while dragging 
 - [ ] keep chosen color clone to enable undoing changes
@@ -26,11 +25,15 @@
 - [ ] refactor palette UI actions into a class
 - [ ] refactor info panel actions into a class
 - [ ] rotate dots with CSS by negating cubes rotation
+- [ ] plain elements delibrate styling
+- [ ] fonts in rems, sizes in px
 
 
 ### In Progress
 
-- [ ] general styling upgrades
+- [ ] custom palettes overview modal
+- [ ] custom palettes export
+- [ ] create custom palettes from various data
 
 
 ### Done ✓
@@ -58,3 +61,4 @@
 - [x] info panel corner fold widget for marking chosen dot
 - [x] hue range widget
 - [x] additional predefined palettes
+- [x] general styling improvements
