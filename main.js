@@ -1107,7 +1107,10 @@ function addCustomColor(paletteIndex, swatch) {
 
     // view
     plantDots();
+
     PalettePreview.display();
+    d3.select(chosen.preview).classed('highlight', true);
+
     infoGauges.display(swatch);
 }
 
