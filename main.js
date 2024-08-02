@@ -3,7 +3,8 @@ import './style.css';
 import './components/corner-fold-toggle.css';
 import * as d3 from 'd3';
 import { Swatch, Palette } from './classes';
-import { HueWheel } from './components/hue-range-widget'
+import { HueWheel } from './components/hue-range-widget';
+import { OrganizeModal } from './components/organize-modal';
 
 
 /* 
@@ -612,6 +613,10 @@ function deletePalette() {
         createNewPalette(STRING.defaultPaletteName);
     }
 };
+
+// dialog
+const organizeModal = new OrganizeModal('#organize-modal', '#palette-organize');
+
 
 /* 
  * MARK: Custom colors
