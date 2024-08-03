@@ -615,7 +615,14 @@ function deletePalette() {
 };
 
 // dialog
-const organizeModal = new OrganizeModal('#organize-modal', '#palette-organize');
+const organizeModal = new OrganizeModal(
+    '#organize-modal',
+    '#palette-organize',
+    () => {
+        plantDots();
+        PalettePreview.display();
+    }
+);
 
 
 /* 

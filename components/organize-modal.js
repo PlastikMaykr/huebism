@@ -8,8 +8,14 @@ export class OrganizeModal {
     dialog;
     /** @type {d3.Selection} */
     openButton;
+    /** @type {d3.Selection} */
+    modal;
+    /** @type {d3.Selection} */
+    overview;
+    /** @type {Function} */
+    callback;
 
-    constructor(dialog, openButton) {
+    constructor(dialog, openButton, callback) {
         this.dialog = dialog instanceof HTMLDialogElement ?
             dialog : document.querySelector(dialog);
 
@@ -30,6 +36,8 @@ export class OrganizeModal {
 
         this.modal = d3.select(dialog).select('.modal');
         this.overview = this.modal.select('.overview');
+
+        this.callback = callback || (() => {});
     }
 
     open() {
@@ -38,12 +46,20 @@ export class OrganizeModal {
         this.overview.selectAll('div')
             .data(Palette.collection)
             .join('div')
-            .text(d => d.name)
-            .append('dl')
-            .selectAll('dd')
+            .classed('org-wrapper', true)
+            .call(wrapper => wrapper
+                .append('p')
+                .text(d => d.name)
+                // TODO: text Content to datum name
+            )
+            .append('div')
+            .classed('org-palette', true)
+            .selectAll('div')
             .data(d => d.swatches)
-            .join('dd')
-            .text(d => d.name);
+            .join('div')
+            .classed('org-swatch', true)
+            .style('background-color', d => d.color.formatHex())
+            .text(d => d.name)
 
         this.dialog.showModal();
     }
@@ -51,8 +67,9 @@ export class OrganizeModal {
     close() {
         console.log('Done organizing');
 
-        // TODO: update main grid displays
-
+        this.overview.selectAll('div').remove();
         this.dialog.close();
+
+        this.callback();
     }
 }

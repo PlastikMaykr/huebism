@@ -1,7 +1,7 @@
 dialog {
     position: relative;
-    width: 80%;
-    height: 80%;
+    width: 90%;
+    height: 90%;
     overflow: auto;
     padding: 1em;
     box-sizing: border-box;
@@ -31,4 +31,30 @@ dialog > .close {
     right: 0.5em;
     display: block;
     margin-left: auto;
+}
+
+
+/* Organize modal */
+.overview {
+    display: grid;
+    gap: 1em;
+}
+
+.org-wrapper {
+    padding: 1em;
+    border-radius: 1em;
+    border: 2px solid #808080;
+}
+
+.org-palette {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16ch, 1fr));
+}
+
+.org-swatch {
+    padding: 10px;
+    overflow: hidden;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
 }
