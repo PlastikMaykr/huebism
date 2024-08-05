@@ -76,34 +76,57 @@ export class OrganizeModal {
 
 function editableContent(element, property) {
     element
-        .attr('contenteditable', 'true')
+        .attr('contenteditable', 'false')
         .attr('spellcheck', 'false')
+        .attr('tabindex', '0')
         .text(d => d[property])
         // .on('input', function (event) {
         //     console.log('input', event);
         // })
+        // .on('click', function (event) {
+        //     console.log('Click');
+        //     event.preventDefault();
+        //     d3.select(this).attr('contenteditable', 'true');
+        // })
+        .on('dblclick', function (event) {
+            console.log('DoubleClick');
+            event.preventDefault();
+            d3.select(this).attr('contenteditable', 'true');
+        })
         .on('keydown', function (event) {
             // console.log(event);
-            if (event.code === 'Enter') {
-                event.preventDefault();
+            if (event.code !== 'Enter') return;
+            console.log('Enter', this);
+            event.preventDefault();
+
+            const selection = d3.select(this);
+            const editable = selection.attr('contenteditable').toLowerCase() === 'true';
+
+            if (editable) {
+                selection.attr('contenteditable', 'false');
                 this.blur();
+            } else {
+                selection.attr('contenteditable', 'true');
             }
         })
         .on('focus', function () {
             console.log('focus', this);
-
+            /* 
             const selection = d3.select(this);
             const datum = selection.datum();
             const text = selection.text();
             console.log({ datum, text });
+             */
         })
         .on('blur', function () {
             console.log('blur', this);
 
             const selection = d3.select(this);
+            selection.attr('contenteditable', 'false');
+
             const datum = selection.datum();
             const text = selection.text();
             datum[property] = text;
-            console.log({ datum, text });
+            // console.log({ datum, text });
         });
 }

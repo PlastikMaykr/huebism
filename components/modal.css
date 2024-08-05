@@ -58,15 +58,22 @@ dialog > .close {
     text-wrap: nowrap;
     text-overflow: ellipsis;
     box-sizing: border-box;
+
+    cursor: pointer;
 }
 
 .org-swatch:focus {
     overflow: visible;
     width: fit-content;
     min-width: 100%;
-
     z-index: 1;
     position: relative;
     translate: -50%;
     left: 50%;
+
+    border-radius: 5px;
+}
+
+.org-swatch[contenteditable="true"] {
+    cursor: text;
 }
