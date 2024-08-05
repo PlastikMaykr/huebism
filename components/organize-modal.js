@@ -20,15 +20,16 @@ export class OrganizeModal {
             dialog : document.querySelector(dialog);
 
         d3.select(this.dialog)
+            .on('close', () => this.close())
             .on('mouseup', (event) => {
                 // console.log(event);
                 if (event.target !== this.dialog) return;
-                this.close();
+                this.dialog.close();
             })
             .append('button')
             .classed('close', true)
             .text('✖')
-            .on('mouseup', () => this.close());
+            .on('mouseup', () => this.dialog.close());
 
         this.openButton = openButton instanceof d3.selection ?
             openButton : d3.select(openButton);
@@ -67,7 +68,6 @@ export class OrganizeModal {
         console.log('Done organizing');
 
         this.overview.selectAll('div').remove();
-        this.dialog.close();
 
         this.callback();
     }
