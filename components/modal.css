@@ -36,6 +36,8 @@ dialog > .close {
 
 /* Organize modal */
 .overview {
+    position: relative;
+    overflow: hidden;
     display: grid;
     gap: 1em;
 }
@@ -46,6 +48,15 @@ dialog > .close {
     border: 2px solid #808080;
 }
 
+.org-wrapper > p {
+    margin-bottom: 0.5em;
+    cursor: pointer;
+}
+
+.org-wrapper > p[contenteditable="true"] {
+    cursor: text;
+}
+
 .org-palette {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(16ch, 1fr));
@@ -54,6 +65,7 @@ dialog > .close {
 .org-swatch {
     padding: 10px;
     padding-left: 1em;
+    position: relative;
     overflow: hidden;
     text-wrap: nowrap;
     text-overflow: ellipsis;
@@ -76,4 +88,26 @@ dialog > .close {
 
 .org-swatch[contenteditable="true"] {
     cursor: text;
+}
+
+.drag-handle {
+    /* font-weight: bolder; */
+    font-size: 150%;
+    position: absolute;
+    top: 50%;
+    left: 0.25rem;
+    translate: 0 -50%;
+
+    cursor: grab;
+}
+
+.bucket {
+    padding: 2em;
+    border: 2px solid white;
+    translate: -50% -50%;
+    position: absolute;
+    border-radius: 50%;
+
+    cursor: grabbing;
+    pointer-events: none;
 }
