@@ -38,7 +38,6 @@ export class OrganizeModal {
 
         this.modal = d3.select(dialog).select('.modal');
         this.overview = this.modal.select('.overview')
-            .call(attachDragHandle)
             .call(dragger, this);
 
         this.callback = callback || (() => { });
@@ -157,40 +156,112 @@ function editableContent(element, property) {
         });
 }
 
-let dragActive = false;
-let dropZone = null;
-
 const dragHandle = d3.create('div')
     .classed('drag-handle', true)
+    .attr('contenteditable', 'false')
     .text('⋮')
     .node();
 
-/** @param {d3.Selection} element */
-function attachDragHandle(element) {
-    element
-        .on('mouseover', function (event) {
-            // console.log(event);
-            // const targetCondition = event.target.getAttribute('contenteditable') === 'false';
-            const targetCondition = event.target.matches('.org-swatch');
-            if (targetCondition) {
-                if (dragActive) {
-                    dropZone = event.target;
-                } else {
-                    event.target.append(dragHandle)
-                }
-            } else {
-                dragHandle.remove();
-                dropZone = null;
-            }
-        })
-}
+const swatchPlaceholder = d3.create('div')
+    .classed('org-swatch-placeholder', true)
+    .node();
 
 function dragger(overview, organizeModal) {
+
+    // TODO: drag = { active, element, swatch }
+    let dragActive = false;
     /** @type {d3.Selection<HTMLDivElement, Swatch>} */
     let dragged = null;
 
+    const drop = {
+        /** @type {boolean} */
+        active: false,
+        /** @type {HTMLDivElement} */
+        zone: null,
+        /** @type {Palette} */
+        palette: null,
+        /** @type {Swatch} */
+        swatch: null,
+        /** @type {number} */
+        index: NaN,
+        reset: function () {
+            this.active = false;
+            this.zone = null;
+            this.palette = null;
+            this.swatch = null;
+            this.index = NaN;
+        }
+    };
+
     const bucket = d3.create('div')
-        .classed('bucket', true)
+        .classed('bucket', true);
+
+    overview
+        .on('mouseover', function (event) {
+            /** @type {HTMLDivElement} */
+            const hovered = event.target;
+            console.log(hovered.className, d3.now());
+
+            if (!dragActive) {
+                if (hovered.matches('.org-swatch')) {
+                    hovered.append(dragHandle);
+                } else if (hovered.matches('.drag-handle')) {
+                    console.log('HANDLing');
+                } else {
+                    dragHandle.remove();
+                }
+                return;
+            }
+
+            if (hovered.matches('.org-swatch')) {
+                if (swatchPlaceholder.parentElement === hovered.parentElement &&
+                    hovered.compareDocumentPosition(swatchPlaceholder) === Node.DOCUMENT_POSITION_PRECEDING) {
+                    console.log('drop zone after hovered');
+
+                    drop.reset();
+                    drop.active = true;
+                    drop.palette = d3.select(hovered.parentElement).datum();
+
+                    /** @type {Swatch} */
+                    const swatch = d3.select(hovered).datum();
+                    if (swatch === swatch.palette.swatches.at(-1)) {
+                        hovered.parentElement.appendChild(swatchPlaceholder);
+                    } else {
+                        drop.swatch = drop.palette.swatches[swatch.getIndex() + 1];
+
+                        hovered.parentElement
+                            .insertBefore(swatchPlaceholder, hovered.nextElementSibling);
+                    }
+
+                    return;
+                }
+
+                drop.active = true;
+                drop.zone = hovered;
+                console.log('zone', drop.zone);
+                drop.swatch = d3.select(drop.zone).datum();
+
+                hovered.parentElement
+                    .insertBefore(swatchPlaceholder, drop.zone);
+
+            } else if (hovered.matches('.org-swatch-placeholder')) {
+                console.log('PLACEHOLDing');
+                console.log('target', drop.swatch);
+
+            } else if (hovered.matches('.org-palette')) {
+                console.log('PALETTing');
+
+                hovered.appendChild(swatchPlaceholder);
+
+                drop.reset();
+                drop.active = true;
+                drop.palette = d3.select(hovered).datum();
+
+            } else {
+                swatchPlaceholder.remove();
+                drop.reset();
+            }
+        })
 
     /** @param {d3.D3DragEvent} event */
     function dragstart(event) {
@@ -228,22 +299,29 @@ function dragger(overview, organizeModal) {
         dragged.style('display', null);
         bucket.remove();
 
-        if (dropZone) {
+        if (drop.active) {
             const dragSwatch = dragged.datum();
-
-            /** @type {Swatch} */
-            const dropSwatch = d3.select(dropZone).datum();
             dragSwatch.palette.swatches.splice(dragSwatch.getIndex(), 1);
-            dragSwatch.palette = dropSwatch.palette;
-            const index = dropSwatch.getIndex();
-            dropSwatch.palette.swatches.splice(index, 0, dragSwatch);
+
+            if (drop.swatch) {
+                dragSwatch.palette = drop.swatch.palette;
+                const index = drop.swatch.getIndex();
+                drop.swatch.palette.swatches.splice(index, 0, dragSwatch);
+            } else if (drop.palette) {
+                dragSwatch.palette = drop.palette;
+                drop.palette.swatches.push(dragSwatch);
+            } else { debugger }
 
             organizeModal.update();
         }
 
+        swatchPlaceholder.remove();
+
         dragged = null;
 
         dragActive = false;
+
+        drop.reset();
     }
 
     return d3.drag()
@@ -254,7 +332,6 @@ function dragger(overview, organizeModal) {
                 !event.ctrlKey &&
                 !event.button &&
                 event.originalTarget === dragHandle
-                // event.originalTarget.getAttribute('contenteditable') === 'false'
             );
         })
         .on('start', dragstart)

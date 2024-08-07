@@ -19,6 +19,7 @@ dialog::backdrop {
 /* TODO: remove defaults from dialog and explicitly style .modal */
 dialog > .modal {
     position: absolute;
+    overflow: hidden;
     inset: 0;
     height: fit-content;
     padding: 2rem;
@@ -37,7 +38,6 @@ dialog > .close {
 /* Organize modal */
 .overview {
     position: relative;
-    overflow: hidden;
     display: grid;
     gap: 1em;
 }
@@ -64,7 +64,7 @@ dialog > .close {
 
 .org-swatch {
     padding: 10px;
-    padding-left: 1em;
+    padding-left: 20px;
     position: relative;
     overflow: hidden;
     text-wrap: nowrap;
@@ -90,15 +90,39 @@ dialog > .close {
     cursor: text;
 }
 
+.org-swatch-placeholder {
+    padding: 10px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+
+    color: white;
+    outline: 3px dashed currentColor;
+    outline-offset: -3px;
+    
+    cursor: context-menu;
+}
+
+.org-swatch-placeholder::after {
+    content: '🌢';
+}
+
 .drag-handle {
     /* font-weight: bolder; */
     font-size: 150%;
     position: absolute;
-    top: 50%;
-    left: 0.25rem;
-    translate: 0 -50%;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 100%;
+
+    display: grid;
+    place-items: center;
+
+    background-color: #80808080;
 
     cursor: grab;
+    user-select: none;
 }
 
 .bucket {
