@@ -168,10 +168,23 @@ const swatchPlaceholder = d3.create('div')
 
 function dragger(overview, organizeModal) {
 
-    // TODO: drag = { active, element, swatch }
-    let dragActive = false;
-    /** @type {d3.Selection<HTMLDivElement, Swatch>} */
-    let dragged = null;
+    const drag = {
+        /** @type {boolean} */
+        active: false,
+        /** @type {boolean} */
+        clone: false,
+        /** @type {d3.Selection<HTMLDivElement, Swatch>} */
+        element: null,
+        /** @type {Swatch} */
+        get swatch() {
+            return this.element?.datum()
+        },
+        reset: function () {
+            this.active = false;
+            this.clone = false;
+            this.element = null;
+        }
+    };
 
     const drop = {
         /** @type {boolean} */
@@ -202,7 +215,7 @@ function dragger(overview, organizeModal) {
             const hovered = event.target;
             // console.log(hovered.className, d3.now());
 
-            if (!dragActive) {
+            if (!drag.active) {
                 if (hovered.matches('.org-swatch')) {
                     hovered.append(dragHandle);
                 } else if (hovered.matches('.drag-handle')) {
@@ -267,17 +280,23 @@ function dragger(overview, organizeModal) {
     function dragstart(event) {
         console.log('dragStart', event);
 
-        dragActive = true;
+        drag.active = true;
+        drag.element = d3.select(event.sourceEvent.target.parentNode);
 
-        dragged = d3.select(event.sourceEvent.target.parentNode)
-            .style('display', 'none');
+        if (event.sourceEvent.altKey) {
+            drag.clone = true;
+            drag.element.node().blur();
+            dragHandle.remove();
+        } else {
+            drag.element.style('display', 'none');
+        }
 
         const [x, y] = d3.pointer(event, this);
 
         this.append(bucket
             .style('left', x + 'px')
             .style('top', y + 'px')
-            .style('background-color', dragged.style('background-color'))
+            .style('background-color', drag.element.style('background-color'))
             .node());
 
         organizeModal.modal.classed('drag-active', true);
@@ -291,19 +310,27 @@ function dragger(overview, organizeModal) {
         bucket
             .style('left', x + 'px')
             .style('top', y + 'px')
-            .style('background-color', dragged.style('background-color'));
+            .style('background-color', drag.element.style('background-color'));
     }
 
     /** @param {d3.D3DragEvent} event */
     function dragend(event) {
         console.log('dragEnd', event);
 
-        dragged.style('display', null);
+        drag.element.style('display', null);
         bucket.remove();
 
         if (drop.active) {
-            const dragSwatch = dragged.datum();
-            dragSwatch.palette.swatches.splice(dragSwatch.getIndex(), 1);
+
+            let dragSwatch;
+            if (drag.clone) {
+                const name = drag.swatch.name;
+                const color = drag.swatch.color.copy();
+                dragSwatch = new Swatch(name, color);
+            } else {
+                dragSwatch = drag.swatch;
+                dragSwatch.palette.swatches.splice(dragSwatch.getIndex(), 1);
+            }
 
             if (drop.swatch) {
                 dragSwatch.palette = drop.swatch.palette;
@@ -321,9 +348,10 @@ function dragger(overview, organizeModal) {
 
         organizeModal.modal.classed('drag-active', false);
 
-        dragged = null;
+        // dragged = null;
+        // drag.active = false;
 
-        dragActive = false;
+        drag.reset();
 
         drop.reset();
     }
