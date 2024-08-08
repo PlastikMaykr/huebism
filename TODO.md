@@ -32,7 +32,7 @@
 ### In Progress
 
 - [x] custom palettes overview modal
-- [ ] custom palettes editing
+- [x] custom palettes editing
 - [ ] custom palettes export
 - [ ] create custom palettes from various data
 

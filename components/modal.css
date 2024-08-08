@@ -60,9 +60,17 @@ dialog > .close {
 .org-palette {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(16ch, 1fr));
+    min-height: calc(20px + 1.5rem);
+}
+
+.drag-active .org-palette:hover {
+    background-color: #ffffff33;
 }
 
 .org-swatch {
+    font-size: 1rem;
+    line-height: 1.5;
+
     padding: 10px;
     padding-left: 20px;
     position: relative;
@@ -132,6 +140,10 @@ dialog > .close {
     position: absolute;
     border-radius: 50%;
 
-    cursor: grabbing;
+    /* cursor: grabbing; */
     pointer-events: none;
+}
+
+.drag-active :hover {
+    cursor: grabbing;
 }

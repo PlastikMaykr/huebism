@@ -200,7 +200,7 @@ function dragger(overview, organizeModal) {
         .on('mouseover', function (event) {
             /** @type {HTMLDivElement} */
             const hovered = event.target;
-            console.log(hovered.className, d3.now());
+            // console.log(hovered.className, d3.now());
 
             if (!dragActive) {
                 if (hovered.matches('.org-swatch')) {
@@ -279,6 +279,8 @@ function dragger(overview, organizeModal) {
             .style('top', y + 'px')
             .style('background-color', dragged.style('background-color'))
             .node());
+
+        organizeModal.modal.classed('drag-active', true);
     }
 
     /** @param {d3.D3DragEvent} event */
@@ -316,6 +318,8 @@ function dragger(overview, organizeModal) {
         }
 
         swatchPlaceholder.remove();
+
+        organizeModal.modal.classed('drag-active', false);
 
         dragged = null;
 
