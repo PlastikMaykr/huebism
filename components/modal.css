@@ -107,7 +107,7 @@ dialog > .close {
     color: white;
     outline: 3px dashed currentColor;
     outline-offset: -3px;
-    
+
     cursor: context-menu;
 }
 
@@ -133,17 +133,84 @@ dialog > .close {
     user-select: none;
 }
 
+.drag-active :hover {
+    cursor: grabbing;
+}
+
 .bucket {
-    padding: 2em;
-    border: 2px solid white;
+    --size: 50px;
+    /* padding: 2em; */
+    border: solid white;
     translate: -50% -50%;
     position: absolute;
-    border-radius: 50%;
+    /* border-radius: 50%; */
 
     /* cursor: grabbing; */
     pointer-events: none;
+
 }
 
-.drag-active :hover {
-    cursor: grabbing;
+.bucket.unfocus {
+    animation: pour 350ms /* ease-out */ forwards;
+}
+
+.bucket.focus {
+    animation: ladle 250ms ease-in forwards;
+}
+
+/* bucket ladle/pour animations */
+@keyframes ladle {
+    from {
+        border-radius: 0;
+        border-width: 0;
+
+        width: var(--w);
+        height: var(--h);
+        top: var(--y);
+        left: var(--x);
+    }
+
+    to {
+        border-radius: var(--size);
+        border-width: 3px;
+
+        width: var(--size);
+        height: var(--size);
+        top: var(--top);
+        left: var(--left);
+    }
+}
+
+@keyframes pour {
+    from {
+        opacity: 1;
+        border-radius: var(--size);
+        border-width: 3px;
+        filter: blur(0);
+
+        width: var(--size);
+        height: var(--size);
+        top: var(--top);
+        left: var(--left);
+    }
+    35% {
+        opacity: 1;
+        border-radius: 0;
+        border-width: 0;
+        filter: blur(0);
+    }
+    85% {
+        opacity: 0;
+    }
+    to {
+        opacity: 0;
+        border-radius: 0;
+        border-width: 0;
+        filter: blur(3px);
+
+        width: var(--w);
+        height: var(--h);
+        top: var(--y);
+        left: var(--x);
+    }
 }

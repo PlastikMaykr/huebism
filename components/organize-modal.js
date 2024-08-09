@@ -207,7 +207,9 @@ function dragger(overview, organizeModal) {
     };
 
     const bucket = d3.create('div')
-        .classed('bucket', true);
+        .classed('bucket', true)
+    // .attr('tabindex', '-1')
+    // .attr('contenteditable', 'true');
 
     overview
         .on('mouseover', function (event) {
@@ -280,24 +282,39 @@ function dragger(overview, organizeModal) {
     function dragstart(event) {
         console.log('dragStart', event);
 
+        const element = event.sourceEvent.target.parentNode;
+        drag.element = d3.select(element);
         drag.active = true;
-        drag.element = d3.select(event.sourceEvent.target.parentNode);
+
+        const [left, top] = d3.pointer(event, this);
+        const parentBBox = overview.node().getBoundingClientRect();
+        const childBBox = element.getBoundingClientRect();
+        const x = childBBox.x + childBBox.width / 2 - parentBBox.x;
+        const y = childBBox.y + childBBox.height / 2 - parentBBox.y;
+        const w = childBBox.width;
+        const h = childBBox.height;
+        console.log({ element, x, y, w, h });
+
+        this.append(bucket
+            .classed('unfocus', false)
+            .classed('focus', true)
+            .style('--left', left + 'px')
+            .style('--top', top + 'px')
+            .style('--x', x + 'px')
+            .style('--y', y + 'px')
+            .style('--w', w + 'px')
+            .style('--h', h + 'px')
+            .style('background-color', drag.element.style('background-color'))
+            .node());
 
         if (event.sourceEvent.altKey) {
             drag.clone = true;
-            drag.element.node().blur();
+            // drag.element.node().blur();
+            element.blur();
             dragHandle.remove();
         } else {
             drag.element.style('display', 'none');
         }
-
-        const [x, y] = d3.pointer(event, this);
-
-        this.append(bucket
-            .style('left', x + 'px')
-            .style('top', y + 'px')
-            .style('background-color', drag.element.style('background-color'))
-            .node());
 
         organizeModal.modal.classed('drag-active', true);
     }
@@ -308,17 +325,23 @@ function dragger(overview, organizeModal) {
         const [x, y] = d3.pointer(event, this);
 
         bucket
-            .style('left', x + 'px')
-            .style('top', y + 'px')
-            .style('background-color', drag.element.style('background-color'));
+            .style('--left', x + 'px')
+            .style('--top', y + 'px');
     }
 
     /** @param {d3.D3DragEvent} event */
     function dragend(event) {
         console.log('dragEnd', event);
 
-        drag.element.style('display', null);
-        bucket.remove();
+        const parentBBox = overview.node().getBoundingClientRect();
+        const child = drop.active ? swatchPlaceholder :
+            (swatchPlaceholder.remove(), drag.element.style('display', null).node())
+        const childBBox = child.getBoundingClientRect();
+        const x = childBBox.x + childBBox.width / 2 - parentBBox.x;
+        const y = childBBox.y + childBBox.height / 2 - parentBBox.y;
+        const w = childBBox.width;
+        const h = childBBox.height;
+        // console.log({ child, x, y, w, h });
 
         if (drop.active) {
 
@@ -344,7 +367,14 @@ function dragger(overview, organizeModal) {
             organizeModal.update();
         }
 
-        swatchPlaceholder.remove();
+        this.append(bucket
+            .classed('focus', false)
+            .classed('unfocus', true)
+            .style('--x', x + 'px')
+            .style('--y', y + 'px')
+            .style('--w', w + 'px')
+            .style('--h', h + 'px')
+            .node());
 
         organizeModal.modal.classed('drag-active', false);
 
