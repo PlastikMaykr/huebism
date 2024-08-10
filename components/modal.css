@@ -40,6 +40,8 @@ dialog > .close {
     position: relative;
     display: grid;
     gap: 1em;
+
+    --drop-time: 250ms;
 }
 
 .org-wrapper {
@@ -80,6 +82,16 @@ dialog > .close {
     box-sizing: border-box;
 
     cursor: pointer;
+    
+    /*     */
+    animation: reveal linear var(--drop-time);
+    /* animation-delay: var(--drop-time); */
+    mask-image: radial-gradient(black 35%, transparent 75%);
+    mask-position: 50% 50%;
+    mask-repeat: no-repeat;
+    mask-clip: no-clip;
+    mask-size: 300% 300%;
+    /* */
 }
 
 .org-swatch:focus {
@@ -92,6 +104,18 @@ dialog > .close {
     left: 50%;
 
     border-radius: 5px;
+}
+
+@keyframes reveal {
+    from {
+        mask-size: 0% 0%;
+    }
+    50% {
+        mask-size: 0% 0%;
+    }
+    to {
+        mask-size: 300% 300%;
+    }
 }
 
 .org-swatch[contenteditable="true"] {
@@ -151,7 +175,7 @@ dialog > .close {
 }
 
 .bucket.unfocus {
-    animation: pour 350ms /* ease-out */ forwards;
+    animation: pour var(--drop-time) linear forwards;
 }
 
 .bucket.focus {
@@ -186,7 +210,7 @@ dialog > .close {
         opacity: 1;
         border-radius: var(--size);
         border-width: 3px;
-        filter: blur(0);
+        /* filter: blur(0); */
 
         width: var(--size);
         height: var(--size);
@@ -194,23 +218,24 @@ dialog > .close {
         left: var(--left);
     }
     35% {
-        opacity: 1;
-        border-radius: 0;
+        /* opacity: 1; */
+        /* border-radius: 5px; */
         border-width: 0;
-        filter: blur(0);
+        /* filter: blur(0); */
     }
     85% {
-        opacity: 0;
-    }
-    to {
-        opacity: 0;
-        border-radius: 0;
-        border-width: 0;
-        filter: blur(3px);
+        opacity: 1;
+        border-radius: 5px;
 
         width: var(--w);
         height: var(--h);
         top: var(--y);
         left: var(--x);
+    }
+    to {
+        opacity: 0;
+        /* border-radius: 5px; */
+        border-width: 0;
+        /* filter: blur(3px); */
     }
 }

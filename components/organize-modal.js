@@ -13,6 +13,8 @@ export class OrganizeModal {
     modal;
     /** @type {d3.Selection} */
     overview;
+    /** @type {Map<Swatch,HTMLDivElement>} */
+    swatchMap;
     /** @type {Function} */
     callback;
 
@@ -40,6 +42,8 @@ export class OrganizeModal {
         this.overview = this.modal.select('.overview')
             .call(dragger, this);
 
+        this.swatchMap = new Map();
+
         this.callback = callback || (() => { });
     }
 
@@ -47,7 +51,7 @@ export class OrganizeModal {
         console.log('Organize');
 
         this.overview.selectAll('div')
-            .data(Palette.collection)
+            .data(Palette.collection, d => d.name)
             .join('div')
             .classed('org-wrapper', true)
             .call(wrapper => wrapper
@@ -57,9 +61,11 @@ export class OrganizeModal {
             .append('div')
             .classed('org-palette', true)
             .selectAll('div')
-            .data(d => d.swatches)
+            .data(d => d.swatches, d => d.name)
             .join('div')
+            .each((d, i, g) => this.swatchMap.set(d, g[i]))
             .classed('org-swatch', true)
+            .style('animation', 'none')
             .style('background-color', d => d.color.formatHex())
             .call(editableContent, 'name');
 
@@ -78,7 +84,7 @@ export class OrganizeModal {
         this.overview.selectAll('div').remove();
 
         this.overview.selectAll('div')
-            .data(Palette.collection)
+            .data(Palette.collection, d => d.name)
             .join('div')
             .classed('org-wrapper', true)
             .call(wrapper => wrapper
@@ -88,9 +94,11 @@ export class OrganizeModal {
             .append('div')
             .classed('org-palette', true)
             .selectAll('div')
-            .data(d => d.swatches)
+            .data(d => d.swatches, d => d.name)
             .join('div')
+            .each((d, i, g) => this.swatchMap.set(d, g[i]))
             .classed('org-swatch', true)
+            .style('animation', 'none')
             .style('background-color', d => d.color.formatHex())
             .call(editableContent, 'name');
 
@@ -343,9 +351,9 @@ function dragger(overview, organizeModal) {
         const h = childBBox.height;
         // console.log({ child, x, y, w, h });
 
+        let dragSwatch;
+        
         if (drop.active) {
-
-            let dragSwatch;
             if (drag.clone) {
                 const name = drag.swatch.name;
                 const color = drag.swatch.color.copy();
@@ -366,6 +374,15 @@ function dragger(overview, organizeModal) {
 
             organizeModal.update();
         }
+
+        // focus on swatch preview
+        if (!dragSwatch) dragSwatch = drag.swatch;
+        const preview = organizeModal.swatchMap.get(dragSwatch);
+        console.log(preview);
+        preview.focus();
+        preview.style.animation = 'none';
+        preview.offsetHeight;
+        preview.style.animation = null;
 
         this.append(bucket
             .classed('focus', false)
