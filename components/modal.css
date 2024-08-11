@@ -18,9 +18,11 @@ dialog::backdrop {
 
 /* TODO: remove defaults from dialog and explicitly style .modal */
 dialog > .modal {
+    box-sizing: border-box;
     position: absolute;
     overflow: hidden;
     inset: 0;
+    min-height: 100%;
     height: fit-content;
     padding: 2rem;
     background-color: hsl(0, 0%, var(--bg-value, 50%));
@@ -52,7 +54,7 @@ dialog > .close {
 
 .org-wrapper > p {
     margin-bottom: 0.5em;
-    cursor: pointer;
+    /* cursor: pointer; */
 }
 
 .org-wrapper > p[contenteditable="true"] {
@@ -67,6 +69,8 @@ dialog > .close {
 
 .drag-active .org-palette:hover {
     background-color: #ffffff33;
+    
+    cursor: alias !important;
 }
 
 .org-swatch {
@@ -132,7 +136,7 @@ dialog > .close {
     outline: 3px dashed currentColor;
     outline-offset: -3px;
 
-    cursor: context-menu;
+    /* cursor: context-menu; */
 }
 
 .org-swatch-placeholder::after {
@@ -157,21 +161,22 @@ dialog > .close {
     user-select: none;
 }
 
-.drag-active :hover {
-    cursor: grabbing;
+.drag-active:hover {
+    cursor: grabbing !important;
 }
 
 .bucket {
+    /* opacity: 0; */
     --size: 50px;
     /* padding: 2em; */
     border: solid white;
+    border-width: 0;
     translate: -50% -50%;
     position: absolute;
     /* border-radius: 50%; */
 
     /* cursor: grabbing; */
     pointer-events: none;
-
 }
 
 .bucket.unfocus {
@@ -185,6 +190,7 @@ dialog > .close {
 /* bucket ladle/pour animations */
 @keyframes ladle {
     from {
+        opacity: 1;
         border-radius: 0;
         border-width: 0;
 
@@ -195,6 +201,7 @@ dialog > .close {
     }
 
     to {
+        opacity: 1;
         border-radius: var(--size);
         border-width: 3px;
 
@@ -235,7 +242,7 @@ dialog > .close {
     to {
         opacity: 0;
         /* border-radius: 5px; */
-        border-width: 0;
+        /* border-width: 0; */
         /* filter: blur(3px); */
     }
 }

@@ -128,7 +128,7 @@ function editableContent(element, property) {
         })
         .on('keydown', function (event) {
             // console.log(event);
-            if (event.code !== 'Enter') return;
+            if (event.key !== 'Enter') return;
             console.log('Enter', this);
             event.preventDefault();
 
@@ -250,7 +250,11 @@ function dragger(overview, organizeModal) {
                     if (swatch === swatch.palette.swatches.at(-1)) {
                         hovered.parentElement.appendChild(swatchPlaceholder);
                     } else {
-                        drop.swatch = drop.palette.swatches[swatch.getIndex() + 1];
+                        const dropSwatchCandidate = drop.palette.swatches[swatch.getIndex() + 1];
+
+                        drag.swatch === dropSwatchCandidate ?
+                            drop.active = false :
+                            drop.swatch = dropSwatchCandidate;
 
                         hovered.parentElement
                             .insertBefore(swatchPlaceholder, hovered.nextElementSibling);
@@ -305,6 +309,13 @@ function dragger(overview, organizeModal) {
 
         this.append(bucket
             .classed('unfocus', false)
+            .each((d, i, g) => {
+                const buck = g[i];
+                buck.style.animation = 'none';
+                buck.offsetHeight; /* trigger reflow */
+                buck.style.animation = null;
+                // buck.focus();
+            })
             .classed('focus', true)
             .style('--left', left + 'px')
             .style('--top', top + 'px')
@@ -315,11 +326,12 @@ function dragger(overview, organizeModal) {
             .style('background-color', drag.element.style('background-color'))
             .node());
 
+        dragHandle.remove();
+
         if (event.sourceEvent.altKey) {
             drag.clone = true;
             // drag.element.node().blur();
             element.blur();
-            dragHandle.remove();
         } else {
             drag.element.style('display', 'none');
         }
@@ -352,7 +364,7 @@ function dragger(overview, organizeModal) {
         // console.log({ child, x, y, w, h });
 
         let dragSwatch;
-        
+
         if (drop.active) {
             if (drag.clone) {
                 const name = drag.swatch.name;
@@ -386,6 +398,12 @@ function dragger(overview, organizeModal) {
 
         this.append(bucket
             .classed('focus', false)
+            .each((d, i, g) => {
+                const buck = g[i];
+                buck.style.animation = 'none';
+                buck.offsetHeight; /* trigger reflow */
+                buck.style.animation = null;
+            })
             .classed('unfocus', true)
             .style('--x', x + 'px')
             .style('--y', y + 'px')
@@ -410,7 +428,7 @@ function dragger(overview, organizeModal) {
             return (
                 !event.ctrlKey &&
                 !event.button &&
-                event.originalTarget === dragHandle
+                event.srcElement === dragHandle
             );
         })
         .on('start', dragstart)
