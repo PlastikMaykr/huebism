@@ -31,7 +31,8 @@
 
 ### In Progress
 
-- [ ] custom palettes overview modal
+- [x] custom palettes overview modal
+- [x] custom palettes editing
 - [ ] custom palettes export
 - [ ] create custom palettes from various data
 

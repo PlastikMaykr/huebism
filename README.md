@@ -7,10 +7,11 @@ Huebism is a HSL color space exploration and palette creation tool featuring an 
 
 - **Interactive 3D Palette Cube**: Visualize colors dots in a 3D space where coordinates are map to *Hue*, *Saturation*, and *Lightness*.
 - **Adjustable Hue Range**: Sliders allow you to adjust the hue range so you can focus on specific colors.
-- **Color Selection**: Click on any dot to select its color and view detailed properties, including HSL, RGB, and Hex codes.
-- **Predefined Palettes**: Explore palettes sourced from Wikipedia colors, CSS named colors, Coolors, and more.
-- **Custom Palettes**: Create, save, and manage your own custom palettes. Selected palettes are serialized and saved in localStorage.
+- **Color Selection**: Click on any dot to select its color and view detailed properties, including HSL, RGB, and Hex code.
 - **Color Interpolation**: Interpolate between two neighboring colors with customizable easing functions for each HSL property.
+- **Predefined Palettes**: Explore palettes sourced from Wikipedia colors, CSS named colors, Coolors, and more.
+- **Custom Palettes**: Create and manage your own custom palettes. Your palettes are serialized and stored in your browser's localStorage.
+- *COMING SOON* - **Interoperability**: Import and export palettes in a variety of formats.
 
 
 ## Usage

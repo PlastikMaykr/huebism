@@ -1,0 +1,231 @@
+dialog {
+    position: relative;
+    width: 90%;
+    height: 90%;
+    overflow: auto;
+    padding: 1em;
+    box-sizing: border-box;
+    border-radius: var(--corner, 20px);
+
+    color: inherit;
+    background-color: #808080CC;
+}
+
+dialog::backdrop {
+    background-color: #000000CC;
+    backdrop-filter: blur(2px);
+}
+
+/* TODO: remove defaults from dialog and explicitly style .modal */
+dialog > .modal {
+    box-sizing: border-box;
+    position: absolute;
+    overflow: hidden;
+    inset: 0;
+    min-height: 100%;
+    height: fit-content;
+    padding: 2rem;
+    background-color: hsl(0, 0%, var(--bg-value, 50%));
+}
+
+dialog > .close {
+    position: sticky;
+    top: 0.5em;
+    right: 0.5em;
+    display: block;
+    margin-left: auto;
+}
+
+
+/* Organize modal */
+.overview {
+    position: relative;
+    display: grid;
+    gap: 1em;
+
+    --drop-time: 250ms;
+}
+
+.org-wrapper {
+    padding: 1em;
+    border-radius: 1em;
+    border: 2px solid #808080;
+}
+
+.org-wrapper > p {
+    margin-bottom: 0.5em;
+    /* cursor: pointer; */
+}
+
+.org-wrapper > p[contenteditable="true"] {
+    cursor: text;
+}
+
+.org-palette {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16ch, 1fr));
+    min-height: calc(20px + 1.5rem);
+}
+
+.drag-active .org-palette:hover {
+    background-color: #ffffff33;
+
+    cursor: alias !important;
+}
+
+.org-swatch {
+    font-size: 1rem;
+    line-height: 1.5;
+
+    padding: 10px;
+    padding-left: 25px;
+    position: relative;
+    overflow: hidden;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+
+    cursor: pointer;
+
+    animation: reveal linear var(--drop-time);
+    mask-image: radial-gradient(black 35%, transparent 75%);
+    mask-position: 50% 50%;
+    mask-repeat: no-repeat;
+    mask-clip: no-clip;
+    mask-size: 300% 300%;
+}
+
+.org-swatch:focus {
+    overflow: visible;
+    width: fit-content;
+    min-width: 100%;
+    z-index: 1;
+    position: relative;
+    translate: -50%;
+    left: 50%;
+
+    border-radius: 5px;
+}
+
+@keyframes reveal {
+    from {
+        mask-size: 0% 0%;
+    }
+    65% {
+        mask-size: 0% 0%;
+    }
+    to {
+        mask-size: 300% 300%;
+    }
+}
+
+.org-swatch[contenteditable="true"] {
+    cursor: text;
+}
+
+.org-swatch-placeholder {
+    padding: 10px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+
+    color: white;
+    outline: 3px dashed currentColor;
+    outline-offset: -3px;
+}
+
+.org-swatch-placeholder::after {
+    content: '🌢';
+}
+
+.drag-handle {
+    /* font-weight: bolder; */
+    font-size: 150%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 100%;
+
+    display: grid;
+    place-items: center;
+
+    background-color: #80808080;
+
+    cursor: grab;
+    user-select: none;
+}
+
+.drag-active:hover {
+    cursor: grabbing !important;
+}
+
+.bucket {
+    --size: 50px;
+    border: solid white;
+    border-width: 0;
+    translate: -50% -50%;
+    position: absolute;
+
+    pointer-events: none;
+}
+
+.bucket.unfocus {
+    animation: pour var(--drop-time) linear forwards;
+}
+
+.bucket.focus {
+    animation: ladle 250ms ease-in forwards;
+}
+
+/* bucket ladle/pour animations */
+@keyframes ladle {
+    from {
+        opacity: 1;
+        border-radius: 0;
+        border-width: 0;
+
+        width: var(--w);
+        height: var(--h);
+        top: var(--y);
+        left: var(--x);
+    }
+    to {
+        opacity: 1;
+        border-radius: var(--size);
+        border-width: 3px;
+
+        width: var(--size);
+        height: var(--size);
+        top: var(--top);
+        left: var(--left);
+    }
+}
+
+@keyframes pour {
+    from {
+        opacity: 1;
+        border-radius: var(--size);
+        border-width: 3px;
+
+        width: var(--size);
+        height: var(--size);
+        top: var(--top);
+        left: var(--left);
+    }
+    35% {
+        border-width: 0;
+    }
+    85% {
+        opacity: 1;
+        border-radius: 5px;
+
+        width: var(--w);
+        height: var(--h);
+        top: var(--y);
+        left: var(--x);
+    }
+    to {
+        opacity: 0;
+    }
+}

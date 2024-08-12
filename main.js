@@ -3,7 +3,8 @@ import './style.css';
 import './components/corner-fold-toggle.css';
 import * as d3 from 'd3';
 import { Swatch, Palette } from './classes';
-import { HueWheel } from './components/hue-range-widget'
+import { HueWheel } from './components/hue-range-widget';
+import { OrganizeModal } from './components/organize-modal';
 
 
 /* 
@@ -613,6 +614,54 @@ function deletePalette() {
     }
 };
 
+function updatePalettesOptions() {
+    customSelect.selectAll('option:not(:last-of-type)').remove();
+
+    for (let palette of Palette.collection) {
+        customSelect.insert('option', 'hr')
+            .datum(palette)
+            .text(d => d.name);
+    }
+
+    const index = Palette.chosenIndex;
+    customSelect.node().selectedIndex = index;
+
+    /* 
+    customSelect.selectAll('option:not(:last-of-type)')
+        .data(Palette.collection)
+        .join(
+            enter => enter
+                .insert('option', 'hr')
+                .text(d => d.name),
+            update => update.text(d => d.name),
+            exit => exit.remove()
+        );
+    */
+}
+
+// dialog
+const organizeModal = new OrganizeModal(
+    '#organize-modal',
+    '#palette-organize',
+    () => {
+        // save palettes
+        window.localStorage.setItem(STRING.customPalettes, Palette.serialize())
+
+        plantDots();
+        PalettePreview.display();
+
+        // update palette names in #custom-palette dropdown
+        updatePalettesOptions()
+
+        // update chosen swatch name in #color-name
+        const chosenSwatch = chosen.swatch;
+        if (chosenSwatch) {
+            document.querySelector('#color-name').value = chosenSwatch.name;
+        }
+    }
+);
+
+
 /* 
  * MARK: Custom colors
  */
@@ -822,7 +871,8 @@ class PalettePreview {
                         this.minus.node().remove();
                         this.handle.node().remove();
                     }),
-                update => update,
+                update => update
+                    .attr('title', d => d.name),
                 exit => exit
                     .each((d, i, g) => {
                         colorMap.get(d.color).preview = null;
@@ -1147,12 +1197,14 @@ function removeSwatch(swatch) {
     // console.log(parsedPalettes);
 
     // create
+    updatePalettesOptions();
+    /* 
     for (let palette of parsedPalettes) {
         customSelect.insert('option', 'hr')
             .datum(palette)
             .text(d => d.name);
     }
-
+     */
     choosePalette(0);
 })();
 
