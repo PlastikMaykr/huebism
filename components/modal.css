@@ -69,7 +69,7 @@ dialog > .close {
 
 .drag-active .org-palette:hover {
     background-color: #ffffff33;
-    
+
     cursor: alias !important;
 }
 
@@ -78,7 +78,7 @@ dialog > .close {
     line-height: 1.5;
 
     padding: 10px;
-    padding-left: 20px;
+    padding-left: 25px;
     position: relative;
     overflow: hidden;
     text-wrap: nowrap;
@@ -86,16 +86,13 @@ dialog > .close {
     box-sizing: border-box;
 
     cursor: pointer;
-    
-    /*     */
+
     animation: reveal linear var(--drop-time);
-    /* animation-delay: var(--drop-time); */
     mask-image: radial-gradient(black 35%, transparent 75%);
     mask-position: 50% 50%;
     mask-repeat: no-repeat;
     mask-clip: no-clip;
     mask-size: 300% 300%;
-    /* */
 }
 
 .org-swatch:focus {
@@ -114,7 +111,7 @@ dialog > .close {
     from {
         mask-size: 0% 0%;
     }
-    50% {
+    65% {
         mask-size: 0% 0%;
     }
     to {
@@ -135,8 +132,6 @@ dialog > .close {
     color: white;
     outline: 3px dashed currentColor;
     outline-offset: -3px;
-
-    /* cursor: context-menu; */
 }
 
 .org-swatch-placeholder::after {
@@ -166,16 +161,12 @@ dialog > .close {
 }
 
 .bucket {
-    /* opacity: 0; */
     --size: 50px;
-    /* padding: 2em; */
     border: solid white;
     border-width: 0;
     translate: -50% -50%;
     position: absolute;
-    /* border-radius: 50%; */
 
-    /* cursor: grabbing; */
     pointer-events: none;
 }
 
@@ -199,7 +190,6 @@ dialog > .close {
         top: var(--y);
         left: var(--x);
     }
-
     to {
         opacity: 1;
         border-radius: var(--size);
@@ -217,7 +207,6 @@ dialog > .close {
         opacity: 1;
         border-radius: var(--size);
         border-width: 3px;
-        /* filter: blur(0); */
 
         width: var(--size);
         height: var(--size);
@@ -225,10 +214,7 @@ dialog > .close {
         left: var(--left);
     }
     35% {
-        /* opacity: 1; */
-        /* border-radius: 5px; */
         border-width: 0;
-        /* filter: blur(0); */
     }
     85% {
         opacity: 1;
@@ -241,8 +227,5 @@ dialog > .close {
     }
     to {
         opacity: 0;
-        /* border-radius: 5px; */
-        /* border-width: 0; */
-        /* filter: blur(3px); */
     }
 }

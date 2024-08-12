@@ -644,6 +644,9 @@ const organizeModal = new OrganizeModal(
     '#organize-modal',
     '#palette-organize',
     () => {
+        // save palettes
+        window.localStorage.setItem(STRING.customPalettes, Palette.serialize())
+
         plantDots();
         PalettePreview.display();
 

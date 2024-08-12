@@ -8,6 +8,8 @@ export class OrganizeModal {
     /** @type {HTMLDialogElement} */
     dialog;
     /** @type {d3.Selection} */
+    closeButton;
+    /** @type {d3.Selection} */
     openButton;
     /** @type {d3.Selection} */
     modal;
@@ -22,7 +24,7 @@ export class OrganizeModal {
         this.dialog = dialog instanceof HTMLDialogElement ?
             dialog : document.querySelector(dialog);
 
-        d3.select(this.dialog)
+        this.closeButton = d3.select(this.dialog)
             .on('close', () => this.close())
             .on('mouseup', (event) => {
                 // console.log(event);
@@ -32,7 +34,7 @@ export class OrganizeModal {
             .append('button')
             .classed('close', true)
             .text('✖')
-            .on('mouseup', () => this.dialog.close());
+            .on('click', () => this.dialog.close());
 
         this.openButton = openButton instanceof d3.selection ?
             openButton : d3.select(openButton);
@@ -70,6 +72,8 @@ export class OrganizeModal {
             .call(editableContent, 'name');
 
         this.dialog.showModal();
+
+        this.closeButton.node().focus();
     }
 
     close() {
@@ -106,7 +110,6 @@ export class OrganizeModal {
     }
 }
 
-
 function editableContent(element, property) {
     element
         .attr('contenteditable', 'false')
@@ -122,14 +125,14 @@ function editableContent(element, property) {
         //     d3.select(this).attr('contenteditable', 'true');
         // })
         .on('dblclick', function (event) {
-            console.log('DoubleClick');
+            // console.log('DoubleClick');
             event.preventDefault();
             d3.select(this).attr('contenteditable', 'true');
         })
         .on('keydown', function (event) {
             // console.log(event);
             if (event.key !== 'Enter') return;
-            console.log('Enter', this);
+            // console.log('Enter', this);
             event.preventDefault();
 
             const selection = d3.select(this);
@@ -142,15 +145,9 @@ function editableContent(element, property) {
                 selection.attr('contenteditable', 'true');
             }
         })
-        .on('focus', function () {
-            // console.log('focus', this);
-            /* 
-            const selection = d3.select(this);
-            const datum = selection.datum();
-            const text = selection.text();
-            console.log({ datum, text });
-             */
-        })
+        // .on('focus', function () {
+        //     console.log('focus', this);
+        // })
         .on('blur', function () {
             // console.log('blur', this);
 
@@ -197,27 +194,19 @@ function dragger(overview, organizeModal) {
     const drop = {
         /** @type {boolean} */
         active: false,
-        /** @type {HTMLDivElement} */
-        zone: null,
         /** @type {Palette} */
         palette: null,
         /** @type {Swatch} */
         swatch: null,
-        /** @type {number} */
-        index: NaN,
         reset: function () {
             this.active = false;
-            this.zone = null;
             this.palette = null;
             this.swatch = null;
-            this.index = NaN;
         }
     };
 
     const bucket = d3.create('div')
-        .classed('bucket', true)
-    // .attr('tabindex', '-1')
-    // .attr('contenteditable', 'true');
+        .classed('bucket', true);
 
     overview
         .on('mouseover', function (event) {
@@ -229,7 +218,7 @@ function dragger(overview, organizeModal) {
                 if (hovered.matches('.org-swatch')) {
                     hovered.append(dragHandle);
                 } else if (hovered.matches('.drag-handle')) {
-                    console.log('HANDLing');
+                    // console.log('HANDLing');
                 } else {
                     dragHandle.remove();
                 }
@@ -239,7 +228,7 @@ function dragger(overview, organizeModal) {
             if (hovered.matches('.org-swatch')) {
                 if (swatchPlaceholder.parentElement === hovered.parentElement &&
                     hovered.compareDocumentPosition(swatchPlaceholder) === Node.DOCUMENT_POSITION_PRECEDING) {
-                    console.log('drop zone after hovered');
+                    // console.log('drop zone after hovered');
 
                     drop.reset();
                     drop.active = true;
@@ -264,35 +253,33 @@ function dragger(overview, organizeModal) {
                 }
 
                 drop.active = true;
-                drop.zone = hovered;
-                console.log('zone', drop.zone);
-                drop.swatch = d3.select(drop.zone).datum();
+                // console.log('zone', hovered);
+                drop.swatch = d3.select(hovered).datum();
 
                 hovered.parentElement
-                    .insertBefore(swatchPlaceholder, drop.zone);
+                    .insertBefore(swatchPlaceholder, hovered);
 
             } else if (hovered.matches('.org-swatch-placeholder')) {
-                console.log('PLACEHOLDing');
-                console.log('target', drop.swatch);
+                // console.log('PLACEHOLDing');
 
             } else if (hovered.matches('.org-palette')) {
-                console.log('PALETTing');
-
-                hovered.appendChild(swatchPlaceholder);
-
+                // console.log('PALETTing');
                 drop.reset();
                 drop.active = true;
                 drop.palette = d3.select(hovered).datum();
 
+                hovered.appendChild(swatchPlaceholder);
+
             } else {
-                swatchPlaceholder.remove();
                 drop.reset();
+
+                swatchPlaceholder.remove();
             }
         })
 
     /** @param {d3.D3DragEvent} event */
     function dragstart(event) {
-        console.log('dragStart', event);
+        // console.log('dragStart', event);
 
         const element = event.sourceEvent.target.parentNode;
         drag.element = d3.select(element);
@@ -305,17 +292,11 @@ function dragger(overview, organizeModal) {
         const y = childBBox.y + childBBox.height / 2 - parentBBox.y;
         const w = childBBox.width;
         const h = childBBox.height;
-        console.log({ element, x, y, w, h });
+        // console.log({ element, x, y, w, h });
 
         this.append(bucket
             .classed('unfocus', false)
-            .each((d, i, g) => {
-                const buck = g[i];
-                buck.style.animation = 'none';
-                buck.offsetHeight; /* trigger reflow */
-                buck.style.animation = null;
-                // buck.focus();
-            })
+            .each(resetCSSAnimation)
             .classed('focus', true)
             .style('--left', left + 'px')
             .style('--top', top + 'px')
@@ -330,7 +311,6 @@ function dragger(overview, organizeModal) {
 
         if (event.sourceEvent.altKey) {
             drag.clone = true;
-            // drag.element.node().blur();
             element.blur();
         } else {
             drag.element.style('display', 'none');
@@ -351,7 +331,7 @@ function dragger(overview, organizeModal) {
 
     /** @param {d3.D3DragEvent} event */
     function dragend(event) {
-        console.log('dragEnd', event);
+        // console.log('dragEnd', event);
 
         const parentBBox = overview.node().getBoundingClientRect();
         const child = drop.active ? swatchPlaceholder :
@@ -361,15 +341,13 @@ function dragger(overview, organizeModal) {
         const y = childBBox.y + childBBox.height / 2 - parentBBox.y;
         const w = childBBox.width;
         const h = childBBox.height;
-        // console.log({ child, x, y, w, h });
 
         let dragSwatch;
 
         if (drop.active) {
             if (drag.clone) {
-                const name = drag.swatch.name;
-                const color = drag.swatch.color.copy();
-                dragSwatch = new Swatch(name, color);
+                const { name, color } = drag.swatch;
+                dragSwatch = new Swatch(name, color.copy());
             } else {
                 dragSwatch = drag.swatch;
                 dragSwatch.palette.swatches.splice(dragSwatch.getIndex(), 1);
@@ -385,12 +363,12 @@ function dragger(overview, organizeModal) {
             } else { debugger }
 
             organizeModal.update();
+        } else {
+            dragSwatch = drag.swatch;
         }
 
         // focus on swatch preview
-        if (!dragSwatch) dragSwatch = drag.swatch;
         const preview = organizeModal.swatchMap.get(dragSwatch);
-        console.log(preview);
         preview.focus();
         preview.style.animation = 'none';
         preview.offsetHeight;
@@ -398,12 +376,7 @@ function dragger(overview, organizeModal) {
 
         this.append(bucket
             .classed('focus', false)
-            .each((d, i, g) => {
-                const buck = g[i];
-                buck.style.animation = 'none';
-                buck.offsetHeight; /* trigger reflow */
-                buck.style.animation = null;
-            })
+            .each(resetCSSAnimation)
             .classed('unfocus', true)
             .style('--x', x + 'px')
             .style('--y', y + 'px')
@@ -413,11 +386,7 @@ function dragger(overview, organizeModal) {
 
         organizeModal.modal.classed('drag-active', false);
 
-        // dragged = null;
-        // drag.active = false;
-
         drag.reset();
-
         drop.reset();
     }
 
@@ -435,4 +404,18 @@ function dragger(overview, organizeModal) {
         .on('drag', dragging)
         .on('end', dragend)
         (overview);
+}
+
+/**
+ * Make sure there is no overlap in CSS animations
+ * @param {*} d 
+ * @param {number|0} i 
+ * @param {d3.BaseType[]} g 
+ * @example d3.select('*').each(resetCSSAnimation);
+ */
+function resetCSSAnimation(d, i, g) {
+    const element = g[i];
+    element.style.animation = 'none';
+    element.offsetHeight; /* trigger reflow */
+    element.style.animation = null;
 }
