@@ -24,23 +24,23 @@ export class OrganizeModal {
         this.dialog = dialog instanceof HTMLDialogElement ?
             dialog : document.querySelector(dialog);
 
-        this.closeButton = d3.select(this.dialog)
+        dialog = d3.select(this.dialog)
             .on('close', () => this.close())
             .on('mouseup', (event) => {
                 // console.log(event);
                 if (event.target !== this.dialog) return;
                 this.dialog.close();
-            })
-            .append('button')
-            .classed('close', true)
-            .text('✖')
+            });
+
+        this.closeButton = dialog
+            .select('.close')
             .on('click', () => this.dialog.close());
 
         this.openButton = openButton instanceof d3.selection ?
             openButton : d3.select(openButton);
         this.openButton.on('click', () => this.open());
 
-        this.modal = d3.select(dialog).select('.modal');
+        this.modal = dialog.select('.modal');
         this.overview = this.modal.select('.overview')
             .call(dragger, this);
 

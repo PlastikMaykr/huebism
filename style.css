@@ -153,6 +153,11 @@ header {
   background-color: #666;
 }
 
+header h1 {
+  font-size: 150%;
+  margin: 0;
+}
+
 .bottom-panel,
 .left-panel,
 .right-panel {

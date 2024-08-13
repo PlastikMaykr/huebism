@@ -2,8 +2,8 @@ dialog {
     position: relative;
     width: 90%;
     height: 90%;
-    overflow: auto;
-    padding: 1em;
+    /* overflow: auto; */
+    padding: 0;
     box-sizing: border-box;
     border-radius: var(--corner, 20px);
 
@@ -22,25 +22,50 @@ dialog > .modal {
     position: absolute;
     overflow: hidden;
     inset: 0;
-    min-height: 100%;
-    height: fit-content;
-    padding: 2rem;
+    /* min-height: 100%;
+    height: fit-content; */
+    padding: 0;
+
+    display: grid;
+    grid-template-rows: auto 1fr;
+
     background-color: hsl(0, 0%, var(--bg-value, 50%));
 }
 
-dialog > .close {
-    position: sticky;
-    top: 0.5em;
-    right: 0.5em;
-    display: block;
+dialog .shelf {
+    display: flex;
+    justify-content: space-between;
+
+    padding: 1rem;
+    border-bottom: solid;
+}
+
+dialog .shelf > .title {
+    font-size: 125%;
+    margin: 0.25em 0;
+}
+
+dialog .shelf > .levers {
     margin-left: auto;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+dialog .shelf .close {
+    align-self: flex-start;
+    margin-left: 1rem;
 }
 
 
 /* Organize modal */
 .overview {
     position: relative;
-    display: grid;
+    padding: 2rem;
+    overflow-y: scroll;
+
+    display: flex;
+    flex-direction: column;
     gap: 1em;
 
     --drop-time: 250ms;
