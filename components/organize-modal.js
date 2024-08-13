@@ -52,24 +52,7 @@ export class OrganizeModal {
     open() {
         console.log('Organize');
 
-        this.overview.selectAll('div')
-            .data(Palette.collection, d => d.name)
-            .join('div')
-            .classed('org-wrapper', true)
-            .call(wrapper => wrapper
-                .append('p')
-                .call(editableContent, 'name')
-            )
-            .append('div')
-            .classed('org-palette', true)
-            .selectAll('div')
-            .data(d => d.swatches, d => d.name)
-            .join('div')
-            .each((d, i, g) => this.swatchMap.set(d, g[i]))
-            .classed('org-swatch', true)
-            .style('animation', 'none')
-            .style('background-color', d => d.color.formatHex())
-            .call(editableContent, 'name');
+        this.update();
 
         this.dialog.showModal();
 
@@ -85,26 +68,42 @@ export class OrganizeModal {
     }
 
     update() {
-        this.overview.selectAll('div').remove();
-
-        this.overview.selectAll('div')
+        this.overview.selectAll('.org-wrapper')
             .data(Palette.collection, d => d.name)
-            .join('div')
-            .classed('org-wrapper', true)
-            .call(wrapper => wrapper
-                .append('p')
-                .call(editableContent, 'name')
+            .join(enter => enter.append('div')
+                .classed('org-wrapper', true)
+                .call(wrapper => {
+                    wrapper.append('div')
+                        .classed('org-controls', true)
+                        .call(controls => controls
+                            .append('p')
+                            .call(editableContent, 'name')
+                        )
+                        .call(controls => controls
+                            .append('button')
+                            .text('💾')
+                        )
+
+                    wrapper.append('div')
+                        .classed('org-palette', true)
+                })
             )
-            .append('div')
-            .classed('org-palette', true)
-            .selectAll('div')
-            .data(d => d.swatches, d => d.name)
-            .join('div')
-            .each((d, i, g) => this.swatchMap.set(d, g[i]))
-            .classed('org-swatch', true)
-            .style('animation', 'none')
-            .style('background-color', d => d.color.formatHex())
-            .call(editableContent, 'name');
+            .call(update => update.select('.org-palette')
+                .selectAll('.org-swatch')
+                .data(d => d.swatches, d => d.id)
+                .join(
+                    enter => enter
+                        .append('div')
+                        .classed('org-swatch', true)
+                        .each((d, i, g) => this.swatchMap.set(d, g[i]))
+                        .call(editableContent, 'name')
+                        .style('background-color', d => d.color.formatHex())
+                    // update => update
+                    // exit => exit.remove()
+                    // NOTE: swatchMap would still hold on to both swatch and preview
+                )
+                .style('animation', 'none')
+            )
 
         this.callback();
     }
@@ -333,15 +332,6 @@ function dragger(overview, organizeModal) {
     function dragend(event) {
         // console.log('dragEnd', event);
 
-        const parentBBox = overview.node().getBoundingClientRect();
-        const child = drop.active ? swatchPlaceholder :
-            (swatchPlaceholder.remove(), drag.element.style('display', null).node())
-        const childBBox = child.getBoundingClientRect();
-        const x = childBBox.x + childBBox.width / 2 - parentBBox.x;
-        const y = childBBox.y + childBBox.height / 2 - parentBBox.y;
-        const w = childBBox.width;
-        const h = childBBox.height;
-
         let dragSwatch;
 
         if (drop.active) {
@@ -367,12 +357,16 @@ function dragger(overview, organizeModal) {
             dragSwatch = drag.swatch;
         }
 
-        // focus on swatch preview
-        const preview = organizeModal.swatchMap.get(dragSwatch);
-        preview.focus();
-        preview.style.animation = 'none';
-        preview.offsetHeight;
-        preview.style.animation = null;
+        const parentBBox = overview.node().getBoundingClientRect();
+        const child = drop.active ? swatchPlaceholder :
+            (swatchPlaceholder.remove(), drag.element.style('display', null).node())
+        const childBBox = child.getBoundingClientRect();
+        const x = childBBox.x + childBBox.width / 2 - parentBBox.x;
+        const y = childBBox.y + childBBox.height / 2 - parentBBox.y;
+        const w = childBBox.width;
+        const h = childBBox.height;
+
+        swatchPlaceholder.remove();
 
         this.append(bucket
             .classed('focus', false)
@@ -383,6 +377,13 @@ function dragger(overview, organizeModal) {
             .style('--w', w + 'px')
             .style('--h', h + 'px')
             .node());
+
+        // focus on swatch preview
+        d3.select(organizeModal.swatchMap.get(dragSwatch))
+            .style('display', null)
+            .each(resetCSSAnimation)
+            .node()
+            .focus();
 
         organizeModal.modal.classed('drag-active', false);
 
