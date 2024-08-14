@@ -15,7 +15,7 @@ export class Swatch {
      * @returns {SwatchObj}
      */
     static objectify(swatch) {
-        const {name, color} = swatch;
+        const { name, color } = swatch;
         return {
             name,
             color: color.formatHex()
@@ -28,17 +28,17 @@ export class Swatch {
      * @returns {Swatch}
      */
     static revive(swatchObj, palette) {
-        const {name, color} = swatchObj;
+        const { name, color } = swatchObj;
         return new Swatch(name, color, palette);
     }
 
     constructor(name, color, palette) {
         /** @type {string} */
-        this.name = name; 
+        this.name = name;
         /** @type {string} */
         this.id = generateId();
         /** @type {d3.HSLColor} */
-        this.color = d3.hsl(color).clamp(); 
+        this.color = d3.hsl(color).clamp();
         // this.color = color instanceof d3.hcl ? color : d3.hsl(color).clamp(); 
         /** @type {Palette} */
         this.palette = palette;
@@ -89,11 +89,11 @@ export class Palette {
 
     /** @type {Palette[]} */
     static collection = [];
-    
+
     /** @type {Palette|null} */
     static chosen = null;
 
-    static get chosenIndex () {
+    static get chosenIndex() {
         return this.collection.indexOf(this.chosen);
     }
 
@@ -105,7 +105,9 @@ export class Palette {
 
     constructor(name, swatches = []) {
         /** @type {string} */
-        this.name = name; 
+        this.name = name;
+        /** @type {string} */
+        this.id = generateId();
         /** @type {Swatch[]} */
         this.swatches = swatches;
 

@@ -69,7 +69,7 @@ export class OrganizeModal {
 
     update() {
         this.overview.selectAll('.org-wrapper')
-            .data(Palette.collection, d => d.name)
+            .data(Palette.collection, d => d.id)
             .join(enter => enter.append('div')
                 .classed('org-wrapper', true)
                 .call(wrapper => {
@@ -365,6 +365,7 @@ function dragger(overview, organizeModal) {
         const y = childBBox.y + childBBox.height / 2 - parentBBox.y;
         const w = childBBox.width;
         const h = childBBox.height;
+        // console.log({ child, x, y, w, h });
 
         swatchPlaceholder.remove();
 

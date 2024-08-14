@@ -62,7 +62,7 @@ dialog .shelf .close {
 .overview {
     position: relative;
     padding: 2rem;
-    overflow-y: scroll;
+    overflow: hidden scroll;
 
     display: flex;
     flex-direction: column;
