@@ -97,6 +97,7 @@ export class OrganizeModal {
                         .classed('org-swatch', true)
                         .each((d, i, g) => this.swatchMap.set(d, g[i]))
                         .call(editableContent, 'name')
+                        .style('color', d => d3.lch(d.color).l > 70 ? '#2B2B2B': null)
                         .style('background-color', d => d.color.formatHex())
                     // update => update
                     // exit => exit.remove()
@@ -211,6 +212,7 @@ function dragger(overview, organizeModal) {
         .on('mouseover', function (event) {
             /** @type {HTMLDivElement} */
             const hovered = event.target;
+            if (!hovered.matches) debugger;
             // console.log(hovered.className, d3.now());
 
             if (!drag.active) {
