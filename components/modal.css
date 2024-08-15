@@ -57,12 +57,17 @@ dialog .shelf .close {
     margin-left: 1rem;
 }
 
+dialog .content {
+    margin: 0;
+    padding: 0;
+    overflow: hidden scroll;
+}
+
 
 /* Organize modal */
 .overview {
     position: relative;
     padding: 2rem;
-    overflow: hidden scroll;
 
     display: flex;
     flex-direction: column;
@@ -135,6 +140,10 @@ dialog .shelf .close {
     left: 50%;
 
     border-radius: 5px;
+}
+
+.org-swatch:hover {
+    z-index: 2;
 }
 
 @keyframes reveal {
