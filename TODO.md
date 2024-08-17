@@ -33,7 +33,7 @@
 
 - [x] custom palettes overview modal
 - [x] custom palettes editing
-- [ ] custom palettes export
+- [o] custom palettes import/export
 - [ ] create custom palettes from various data
 
 

@@ -11,7 +11,7 @@ Huebism is a HSL color space exploration and palette creation tool featuring an 
 - **Color Interpolation**: Interpolate between two neighboring colors with customizable easing functions for each HSL property.
 - **Predefined Palettes**: Explore palettes sourced from Wikipedia colors, CSS named colors, Coolors, and more.
 - **Custom Palettes**: Create and manage your own custom palettes. Your palettes are serialized and stored in your browser's localStorage.
-- *COMING SOON* - **Interoperability**: Import and export palettes in a variety of formats.
+- **Interoperability**: Import and export palettes in a variety of formats.
 
 
 ## Usage

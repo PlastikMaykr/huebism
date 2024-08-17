@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import './modal.css';
 import { Swatch, Palette } from '../classes';
+import { FormatExchange, FileExchange } from '../exchange/exchange';
 
 export class OrganizeModal {
     static { }
@@ -30,6 +31,16 @@ export class OrganizeModal {
                 // console.log(event);
                 if (event.target !== this.dialog) return;
                 this.dialog.close();
+            });
+
+        dialog.select('#import')
+            .on('click', (event, d) => {
+                FileExchange.load((name, stringed) => {
+                    const parsed = FormatExchange.parse(stringed);
+                    console.log({ name, stringed, parsed });
+
+                    this.update();
+                });
             });
 
         this.closeButton = dialog
@@ -81,11 +92,17 @@ export class OrganizeModal {
                         )
                         .call(controls => controls
                             .append('button')
-                            .text('💾')
-                        )
+                            .classed('org-export', true)
+                            .text('Export 💾')
+                            .on('click', (event, d) => {
+                                const serialized = FormatExchange.format(d);
+                                console.log(serialized);
+                                FileExchange.save(d.name + '.json', serialized);
+                            })
+                        );
 
                     wrapper.append('div')
-                        .classed('org-palette', true)
+                        .classed('org-palette', true);
                 })
             )
             .call(update => update.select('.org-palette')
@@ -97,7 +114,7 @@ export class OrganizeModal {
                         .classed('org-swatch', true)
                         .each((d, i, g) => this.swatchMap.set(d, g[i]))
                         .call(editableContent, 'name')
-                        .style('color', d => d3.lch(d.color).l > 70 ? '#2B2B2B': null)
+                        .style('color', d => d3.lch(d.color).l > 70 ? '#2B2B2B' : null)
                         .style('background-color', d => d.color.formatHex())
                     // update => update
                     // exit => exit.remove()
