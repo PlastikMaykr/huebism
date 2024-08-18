@@ -1,20 +1,23 @@
 import * as d3 from 'd3';
 import { default as ExchangeJSON } from './json';
+import { default as ExchangeCSS } from './css';
 
 export class FormatExchange {
     static types = {
         json: ExchangeJSON,
+        css: ExchangeCSS,
     };
 
-    // static chosenFormat = this.formats.json;
     static chosen = 'json';
 
     static parse(text, extension = this.chosen) {
         return this.types[extension].parse(text);
     }
 
-    static format(palettes, format = this.chosen) {
-        return this.types[format].format(palettes);
+    static format(palettes, extension = this.chosen) {
+        if (!Array.isArray(palettes)) palettes = [palettes];
+
+        return this.types[extension].format(palettes);
     }
 }
 
@@ -33,10 +36,17 @@ export class FileExchange {
             .attr('accept', this.acceptedExtensions)
             .on('change', (event) => {
                 const file = event.target.files[0];
+                const fileNameSplit = file.name.split('.');
+                const extension = fileNameSplit.pop();
+                const name = fileNameSplit.join('.');
+
+                if (!this.acceptedExtensions.includes(extension)) {
+                    throw new Error('Unsupported file extension', extension)
+                }
 
                 const reader = new FileReader();
                 reader.onload = () => {
-                    callback(file.name, reader.result);
+                    callback(name, extension, reader.result);
                 };
                 reader.readAsText(file);
             })

@@ -35,9 +35,9 @@ export class OrganizeModal {
 
         dialog.select('#import')
             .on('click', (event, d) => {
-                FileExchange.load((name, stringed) => {
-                    const parsed = FormatExchange.parse(stringed);
-                    console.log({ name, stringed, parsed });
+                FileExchange.load((name, extension, stringed) => {
+                    const parsed = FormatExchange.parse(stringed, extension);
+                    console.log({ name, extension, stringed, parsed });
 
                     this.update();
                 });
@@ -93,11 +93,24 @@ export class OrganizeModal {
                         .call(controls => controls
                             .append('button')
                             .classed('org-export', true)
-                            .text('Export 💾')
-                            .on('click', (event, d) => {
-                                const serialized = FormatExchange.format(d);
+                            .text('Export JSON')
+                            .on('click', (event, palette) => {
+                                // const extension = FormatExchange.chosen;
+                                const extension = 'json';
+                                const serialized = FormatExchange.format(palette, extension);
                                 console.log(serialized);
-                                FileExchange.save(d.name + '.json', serialized);
+                                FileExchange.save(palette.name + '.' + extension, serialized);
+                            })
+                        )
+                        .call(controls => controls
+                            .append('button')
+                            .classed('org-export', true)
+                            .text('Export CSS')
+                            .on('click', (event, palette) => {
+                                const extension = 'css';
+                                const serialized = FormatExchange.format(palette, extension);
+                                console.log(serialized);
+                                FileExchange.save(palette.name + '.' + extension, serialized);
                             })
                         );
 

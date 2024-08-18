@@ -16,8 +16,6 @@ export default class {
      * @returns {string} JSON text data
      */
     static format(palettes) {
-        if (!Array.isArray(palettes)) palettes = [palettes];
-
         return JSON.stringify(palettes.map(Palette.objectify), null, 2);
     }
 }
