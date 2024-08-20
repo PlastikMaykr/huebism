@@ -5,6 +5,7 @@ import * as d3 from 'd3';
 import { Swatch, Palette } from './classes';
 import { HueWheel } from './components/hue-range-widget';
 import { OrganizeModal } from './components/organize-modal';
+import { ExportModal } from './components/export-modal';
 
 
 /* 
@@ -645,13 +646,13 @@ const organizeModal = new OrganizeModal(
     '#palette-organize',
     () => {
         // save palettes
-        window.localStorage.setItem(STRING.customPalettes, Palette.serialize())
+        window.localStorage.setItem(STRING.customPalettes, Palette.serialize());
 
         plantDots();
         PalettePreview.display();
 
         // update palette names in #custom-palette dropdown
-        updatePalettesOptions()
+        updatePalettesOptions();
 
         // update chosen swatch name in #color-name
         const chosenSwatch = chosen.swatch;
@@ -661,6 +662,17 @@ const organizeModal = new OrganizeModal(
     }
 );
 
+const exportModal = new ExportModal(
+    '#export-modal',
+    '#palette-export',
+    () => {
+        // save palettes
+        window.localStorage.setItem(STRING.customPalettes, Palette.serialize());
+
+        // update palette names in #custom-palette dropdown
+        updatePalettesOptions();
+    }
+);
 
 /* 
  * MARK: Custom colors

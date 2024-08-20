@@ -45,6 +45,7 @@ dialog .shelf > .title {
     margin: 0.25em 0;
 }
 
+dialog .shelf > .knobs,
 dialog .shelf > .levers {
     margin-left: auto;
     display: flex;
@@ -268,4 +269,36 @@ dialog .content {
     to {
         opacity: 0;
     }
+}
+
+/* Export modal */
+#export-modal > .modal {
+    /* grid-template-rows: auto minmax(max-content, 1fr) minmax(max-content, 1fr); */
+    grid-template-rows: auto fit-content(50%) 1fr;
+}
+
+.overall {
+    /* display: grid; */
+    padding: 2em;
+    background-color: #aaa;
+    /* border-radius: 1em; */
+    /* border: 2px solid #808080; */
+}
+
+.overall pre {
+    white-space: break-spaces;
+    background-color: #eeeeee;
+    /* color: #2b2b2b; */
+}
+
+.exp-wrapper {
+    padding: 1em;
+    border-radius: 1em;
+    border: 2px solid #808080;
+    color: black;
+}
+
+.exp-wrapper.selected {
+    background-color: #4269d0;
+    color: #f0f0f0;
 }
